@@ -56,7 +56,7 @@ function Nav(){
       <div className="container-fluid">
 
         <a className="navbar-brand" href="#">
-          <img src="logo3.png" alt="Avatar Logo" style={{width:"100px", height:"50px"}} className="rounded-pill img-fluid"/> 
+          <img src="log1.jpg" alt="Avatar Logo" style={{width:"100px", height:"50px"}} className="rounded-pill img-fluid"/> 
         </a>
         <form className="d-flex">
               <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
