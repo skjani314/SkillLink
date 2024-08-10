@@ -44,7 +44,7 @@ const handleSearchVisible=()=>{
   return (
     <>
 
-
+    <div className="nav-wrapper">
       <nav className="container-fluid pt-2">
         <Row>
           <Col lg={3} md={3} sm={4} xs={10}>
@@ -142,7 +142,7 @@ const handleSearchVisible=()=>{
    </div>
         </Drawer>
       </nav>
-
+      </div>
     </>
   )
 }
