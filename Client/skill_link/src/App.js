@@ -5,9 +5,11 @@ import 'bootstrap';
 import Nav from './Nav'
 function App() {
   return (
-   <>
-   <Nav/>
-   </>
+   
+   <div className='nav-wrapper'>
+    <Nav/>
+   </div>
+
   );
 }
 

@@ -1,115 +1,149 @@
-import { IoMdHome } from "react-icons/io";
-import { RiCustomerServiceLine } from "react-icons/ri";
-import { FaPhoneVolume } from "react-icons/fa6";
-import { IoIosLogIn } from "react-icons/io";
+import { AiFillHome } from "react-icons/ai";
+import { IoIosArrowDown } from "react-icons/io";
 import { IoLocation } from "react-icons/io5";
-import styled from 'styled-components';
-const StyledIcon = styled(IoMdHome)`
-  width:25px;
-  height:30px;
-`;
+import { Button, Col, Input, Row,Drawer } from 'antd';
+import { MdHomeRepairService } from "react-icons/md";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { FaSearch } from "react-icons/fa";
+import './Nav.css';
+import { MdOutlineMenu } from "react-icons/md";
+import { FaUser,FaUserPlus,FaClipboardList } from "react-icons/fa";
+import { useState } from "react";
+import logo from './log1.png';
 
-function IconWithPadding() {
-  return <StyledIcon />;
+const { Search } = Input;
+
+function Nav() {
+
+
+const [searchVisible,setsearchVisible]=useState('none');
+const [drawerVisible,setDrawervisible]=useState(false);
+
+const showDrawer=()=>
+{
+setDrawervisible(true);
 }
-const  Ricus= styled(RiCustomerServiceLine)`
-  width:25px;
-  height:30px;
-`;
+const closeDrawer=()=>{
 
-function Icons() {
-  return <Ricus />;
-}
-const Faph = styled(FaPhoneVolume)`
-  width:25px;
-  height:30px;
-`;
-
-function Icon() {
-  return <Faph/>;
-}
-const Loc = styled(IoLocation)`
-  width:25px;
-  height:30px;
-`;
-
-function Location() {
-  return <Loc/>;
-}
-const Log = styled(IoIosLogIn)`
-  width:25px;
-  height:30px;
-  margin:10px;
-`;
-
-function Login() {
-  return <Log/>;
+  setDrawervisible(false);
 }
 
-function Nav(){
-    return(
-        <>
-    
+const handleSearchVisible=()=>{
 
-    <nav className="navbar navbar-expand-md bg-light">
+  if(searchVisible=='none')
+    {
+      setsearchVisible('block');
+    }
+    else{
+      setsearchVisible('none');
+    }
 
-      <div className="container-fluid">
+}
 
-        <a className="navbar-brand" href="#">
-          <img src="log1.jpg" alt="Avatar Logo" style={{width:"100px", height:"50px"}} className="rounded-pill img-fluid"/> 
-        </a>
-        <form className="d-flex">
-              <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-              <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
-        <ul className="navbar-nav">
-         <div style={{display:"flex"}}>
-         < IconWithPadding/>
-          <li className="nav-item">
-            <a className="nav-link" href="#">Home</a>
-          </li>
-        </div>
-        <div style={{display:"flex"}}>
-        <Icons />
-          <li className="nav-item">
-            <a className="nav-link" href="#">Service</a>
-          </li>
-        </div>
-          <div style={{display:"flex"}}>
-          <Icon/>
-          <li className="nav-item">
-            <a className="nav-link" href="#">contact</a>
-          </li>
-        </div>
+
+  return (
+    <>
+
+
+      <nav className="container-fluid pt-2">
+        <Row>
+          <Col lg={3} md={3} sm={4} xs={10}>
+            <a><img src={logo} className="img-fluid" /></a>
+          </Col>
+          <Col className="d-block d-sm-none " xs={{span:3,offset:9}}>
+          <FaSearch onClick={handleSearchVisible} className="fs-2 mt-2"/>
+          </Col>
+          <Col className="d-block d-sm-none " xs={{span:2,offset:0}}>
+          <MdOutlineMenu className="fs-2 mt-2" onClick={showDrawer}/>
+           </Col>
           
-          <div style={{display:"flex"}}>
-         <Loc/>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Location</a>
-              <ul className="dropdown-menu">
-                <li><a className="dropdown-item" href="#">Ongole</a></li>
-                <li><a className="dropdown-item" href="#">Hyderabad</a></li>
-                <li><a className="dropdown-item" href="#">Guntur</a></li>
-              </ul>
-            </li>
-          </div>
-          
-            <div style={{display:"flex"}}>
-            
-            <Login/>
-              <div className="btn-group btn-group">
-                <button type="button" className="btn btn-primary">Sign Up</button>
-                <button type="button" className="btn btn-primary">Login</button>
-              
-             </div>
-            </div>
-    
-        </ul>
-      </div>
-    
-    </nav>
-    
-        </>
-    )
+          <Col lg={1}></Col>
+          <Col className="mt-1 original-search-bar-nav" lg={7}>
+            <Search
+              allowClear
+              enterButton="Search"
+              size="large"
+              placeholder="Search..."
+
+            />
+          </Col>
+
+          <Col className="mt-2 d-flex  p-0" lg={2} >
+
+            <IoLocation className="original-search-bar-nav" fontSize="30px" color="red" />
+            <p className="mt-2 original-search-bar-nav me-2">Ongole</p>
+            <IoIosArrowDown className="mt-2 original-search-bar-nav" fontSize="20px"/>
+
+          </Col>
+
+          <Col className="mt-2 d-none d-sm-block menu-bar-nav" lg={{span:10,offset:1}} md={{span:15,offset:6}} sm={{span:21,offset:0}} >
+
+            <ul type="none" className="d-flex justify-content-around">
+              <li  className="mt-1" ><AiFillHome className="mb-1 " /> Home</li>
+              <li className="mt-1" ><MdHomeRepairService className="mb-1 " /> Services</li>
+              <li className="mt-1" ><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</li>
+              <li className="mt-1 search-bar-nav" onClick={handleSearchVisible} ><FaSearch className="mb-1 fs-5" /> </li>
+              <li><Button size="small"><FaUserPlus/> SignUp</Button></li>
+              <li><Button type="primary" size="small"><FaUser/> LogIn</Button></li>
+            </ul>
+
+          </Col>
+
+
+        </Row>
+        <Row className="mt-2" style={{display:searchVisible}}>
+          <Row>
+            <Col className="" span={24}>
+              <Search
+                allowClear
+                enterButton="Search"
+                size="large"
+                placeholder="search..."
+
+              />
+            </Col>
+            <Row>
+              <Col className="mt-1 d-flex p-0" span={24}>
+
+                <IoLocation fontSize="30px" color="red" />
+                <p className="mt-2  me-2">Ongole</p>
+                <IoIosArrowDown className="mt-2 " fontSize="20px"/>
+
+              </Col>
+            </Row>
+          </Row>
+        </Row>
+        <Drawer 
+        visible={drawerVisible}
+        onClose={closeDrawer}
+        placement="right"
+        title="Menu"
+        width="70%"
+        style={{background:'#e3f2fd'}}
+        >
+   <div className="container">
+   <ul type="none" className="d-flex flex-column">
+              <li><Button><FaUserPlus/> Sign Up</Button></li>
+              <hr></hr>
+              <li className="my-1"><Button type="primary"><FaUser/> Log In</Button></li>
+              <hr></hr>
+
+              <li  className="my-1" ><AiFillHome className="mb-1 " /> Home</li>
+              <hr></hr>
+
+              <li className="my-1" ><MdHomeRepairService className="mb-1 " /> Services</li>
+              <hr></hr>
+              <li className="my-1" ><FaClipboardList className="mb-1 " /> My Orders</li>
+              <hr></hr>
+              <li className="my-1" ><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</li>
+                           <hr></hr>
+
+            </ul>
+   </div>
+        </Drawer>
+      </nav>
+
+    </>
+  )
 }
 export default Nav;
