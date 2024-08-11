@@ -44,8 +44,8 @@ const handleSearchVisible=()=>{
   return (
     <>
 
-    <div className="nav-wrapper">
-      <nav className="container-fluid pt-2">
+    <div className="nav-wrapper ">
+      <nav className="container-fluid  pt-2">
         <Row>
           <Col lg={3} md={3} sm={4} xs={10}>
             <a><img src={logo} className="img-fluid" /></a>
@@ -123,9 +123,9 @@ const handleSearchVisible=()=>{
         >
    <div className="container">
    <ul type="none" className="d-flex flex-column">
-              <li><Button><FaUserPlus/> Sign Up</Button></li>
+              <li><Button block><FaUserPlus/> Sign Up</Button></li>
               <hr></hr>
-              <li className="my-1"><Button type="primary"><FaUser/> Log In</Button></li>
+              <li className="my-1"><Button type="primary" block><FaUser/> Log In</Button></li>
               <hr></hr>
 
               <li  className="my-1" ><AiFillHome className="mb-1 " /> Home</li>
@@ -143,6 +143,8 @@ const handleSearchVisible=()=>{
         </Drawer>
       </nav>
       </div>
+      <div className='container-fluid py-md-4 py-sm-5 py-4'></div>
+      
     </>
   )
 }

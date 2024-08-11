@@ -1,0 +1,21 @@
+.footer-wrapper {
+    color: white;
+    font-weight: 300;
+    font-size: medium;
+    }
+.f-icon a{
+        transition: color 0.3s ease
+    }
+    
+.f-icon a:hover{
+    color: #CC5500;
+    cursor: pointer;
+    
+    }
+.footer-wrapper a{
+   text-decoration:none;
+   color: white;
+}
+.footer-wrapper a:hover{
+    text-decoration: underline;
+}

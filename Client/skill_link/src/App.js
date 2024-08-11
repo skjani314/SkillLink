@@ -2,12 +2,13 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
-import Nav from './Components/NavBar/Nav'
+import Home from './Pages/Home/Home';
+
 function App() {
   return (
-   
-    <Nav/>
-
+   <>
+   <Home/>
+  </>
   );
 }
 
