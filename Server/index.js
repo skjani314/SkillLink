@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import User from './models/User.js';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 const app=express();
@@ -24,16 +25,122 @@ mongoose.connect('mongodb+srv://skskjani7:'+process.env.PASSWORD+'@users.3kyxw.m
     useUnifiedTopology: true,
   });
   
+app.post('/passchange',async (req,res)=>{
+
+const token=req.body.token;
+const password=req.body.password;
+
+await jwt.verify(token,process.env.KEY,async (err,decode)=>{
+
+if(err){
+  res.json("token expired");
+}
+else
+{
+
+const email=decode.email;
+
+const result=await User.findOneAndUpdate({email},{password},{ new: true, runValidators: true });
+
+if(!result){}
+
+}
+
+
+})
+
+
+})
+
+
+app.post('/forget/verify',async (req,res)=>{
+
+const token=req.body.token;
+await jwt.verify(token,process.env.KEY,(err,decode)=>{
+
+  if(err)
+    {
+      res.json({verified:false});
+    }
+    else{
+      res.json({verified:true,email:decode.email});
+      console.log(decode);
+    }
+
+})
+
+});
+
+
+
+
+app.post('/forget',async (req,res)=>{
+
+try{
+
+const {email}=req.body;
+console.log(email);
+const user=await User.findOne({email});
+
+if(!user)
+  {
+    res.json("no user found");
+  }
+else{
+
+
+const token=jwt.sign({email},process.env.KEY,{expiresIn:'5m'});
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'skilllinkforget@gmail.com',
+      pass: process.env.EMAILPASSWORD
+    }
+  });
+  
+  const mailOptions = {
+    from: 'skilllinkforget@gmail.com',
+    to: email,
+    subject: 'Forget Password',
+    text: 'Your Password reset link is provided here and \n it will work only for 5 minuetes\n'+'http://192.168.236.207:3000/verify/'+token
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+
+}
+}
+catch(err){
+  next(err);
+}
+
+
+})
+
+
 
 app.post('/logout',(req,res)=>{
 
+try{
 res.clearCookie('accessToken');
 
 return res.json("Logout sccessfully");
+}
+catch(error){
+next(error);
+}
 
 })
 
   app.post('/register',async (req,res)=>{
+try{ 
     const {name,email,password,phone,address,pincode,role}=req.body;
   
     const user=await User.findOne({email});
@@ -48,7 +155,11 @@ return res.json("Logout sccessfully");
       await User.create({name,email,password:hashpassword,role,phone,address,pincode})
       .then(user=>res.json(user))
       .catch(err=>res.json(err))
-  }
+      }
+  
+  } catch(error){
+        next(error);
+  } 
     
     });
 
@@ -88,6 +199,10 @@ return res.json("Logout sccessfully");
     });
     
 
+    app.use((err, req, res, next) => {
+      console.error(err.stack)
+      res.status(500).send('Something broke!')
+    });
 
 
 
