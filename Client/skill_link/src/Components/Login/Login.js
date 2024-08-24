@@ -174,7 +174,7 @@ if(each.checked){role=each.value}
        {rsub?<p>Fill the Required Fields</p>:null}
        <div className='radio-buttons d-flex justify-content-around'>
         <label className='mt-1'>I AM </label>
-        <label><input type="radio" name="role" value="customer"  />{" "}User</label>
+        <label><input type="radio" name="role" value="customer" />{" "}User</label>
         <label> <input type="radio" name="role" value="supplier" />{" "}Supplier</label>
         <label><input type="radio" name="role" value="agent" />{" "}Agent</label>
        </div>
