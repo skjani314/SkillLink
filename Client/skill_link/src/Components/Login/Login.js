@@ -1,10 +1,12 @@
 
-import { Modal, Button as AntButton } from 'antd';
-import React, { useEffect, useState } from 'react';
+import {Button, Input,Spin} from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
 import './login.css';
+import axios from 'axios';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import userContext from './UserContext';
 
-function SigninReg() {
+function SigninReg(props) {
 const [FormFlag,setFormFlag]=useState('reg');
 const [FormData,setFormData]=useState({name:'',email:'',password:'',cpassword:'',mobile:''});
 const [LogData,setLogdata]=useState({email:'',password:''});
@@ -15,11 +17,45 @@ const [lcase,setLcase]=useState(false);
 const [ucase,setUcase]=useState(false);
 const [dig,setDig]=useState(false);
 const [spc,setSpc]=useState(false);
-const [rsub,setRsub]=useState(false);
-const [message,setMessage]=useState('');
+const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
+const [forgetpass,setForgetPass]=useState({email:'',flag:false});
+const {otpform,setOtpform}=props;
 
 
 
+
+
+
+
+const onChange =async (text) => 
+{
+
+try{ 
+  
+setLoading(true);  
+const validation=await axios.post('/verify-otp',{otp:text,email:FormData.email})
+
+   success("OTP Verified Successfully");
+
+  const user=await axios.post('/register', {FormData,role:FormData.role}, { withCredentials: true })  
+  success("Account Created successfully");
+  setFormData({name:'',email:'',password:'',cpassword:'',mobile:''})
+  setLoading(false);
+  setOtpform(false);
+
+
+}catch(err)
+{
+  setLoading(false);
+  error("OTP Wrong");
+}
+
+};
+
+
+const sharedProps = {
+  onChange,
+};
 
 
   useEffect(() => {
@@ -28,6 +64,7 @@ const [message,setMessage]=useState('');
     const signUpForm = document.getElementById('sign-up-form');
     const logInForm = document.getElementById('log-in-form');
   
+
     if (signUpButton && logInButton && signUpForm && logInForm) {
       if (FormFlag !== 'reg') {
         logInButton.classList.add('active');
@@ -36,8 +73,6 @@ const [message,setMessage]=useState('');
         logInForm.style.display = 'block';
         setPsicon(false);
         setLogdata({ email: '', password: '' });
-        setRsub(false);
-        setMessage('');
         setValData({
           name: true,
           email: true,
@@ -47,13 +82,11 @@ const [message,setMessage]=useState('');
          
         });
       } else {
-        setMessage('');
         signUpButton.classList.add('active');
         logInButton.classList.remove('active');
         logInForm.style.display = 'none';
         signUpForm.style.display = 'block';
         setPsicon(false);
-        setRsub(false);
         setFormData({ name: '', email: '', password: '', cpassword: '',mobile:'' });
         setValData({
           name: true,
@@ -65,7 +98,7 @@ const [message,setMessage]=useState('');
         });
       }
     }
-  }, [FormFlag]);
+  }, [FormFlag,otpform]);
   
 
 const handleFormData = (e) => {
@@ -90,6 +123,7 @@ const handleFormData = (e) => {
         setLcase(/[a-z]/.test(value));
         setDig(/[0-9]/.test(value));
         setSpc(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value));
+        setValData(prev => ({ ...prev, password: /^.{8,20}$/.test(value) && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value) && /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value)}));
         break;
       case 'cpassword':
         setValData(prev => ({ ...prev, cpassword: value === FormData.password }));
@@ -107,7 +141,10 @@ const handleFormData = (e) => {
 
 };
 
-
+const showForget=()=>{
+  setOtpform(true);
+  setForgetPass((prev)=>({...prev,flag:true}));
+}
 
 const handleLogData=(e)=>
   {
@@ -116,8 +153,9 @@ const handleLogData=(e)=>
 
   }
 
-const handleRegSubmit = (e) => {
+const handleRegSubmit = async (e) => {
     e.preventDefault();
+       setLoading(true);
     let role='';
     document.getElementsByName('role').forEach(
 (each)=>{
@@ -125,39 +163,86 @@ if(each.checked){role=each.value}
 }
 )
     const cbox=document.getElementsByName('cbox')[0].checked;
-  if(ValData.name  && ValData.email && !ValData.password && ValData.cpassword && ValData.mobile && cbox && role!=='')
+  if(ValData.name  && ValData.email && ValData.password && ValData.cpassword && ValData.mobile && cbox && role!=='')
     {
-
-
-        // axios.post('http://127.0.0.1:3300/register',{FormData,role})
-        // .then(res=>console.log(res))
-        // .catch(err=>console.log(err))
-
-      setFormData({name:'',email:'',password:'',cpassword:'',mobile:''})
-      setRsub(false);
+        setFormData((prev)=>({...prev,role}));
+try{
+  const isOtpSent =await  axios.post('/send-otp',{email:FormData.email},{withCredentials:true})
+  setLoading(false);
+     setOtpform(true);
+     setForgetPass(false);
+     success("OTP sent successfully");
+   
+}catch(err){
+   console.log(err);   
+   error("User Already Found or something wentwrong");
+   setLoading(false);
+}  
+    
     }
     else{
-    setRsub(true);
+
+      error("Fill All the Required Files");
+      setLoading(false);
     }
 
 
   
   };
 
-  const handleLogSubmit=(e)=>
+  const handleLogSubmit=async (e)=>
     {
-        e.preventDefault();
-        // axios.post('http://127.0.0.1:3300/login',{email:LogData.email,password:LogData.password})
-        // .then(res=>{setMessage(res.data.message);console.log(res)})
-        // .catch(err=>console.log(err));
-
+      e.preventDefault();
+      setLoading(true);
+       try{
+        
+       await axios.post('/login',LogData, { withCredentials: true })
+    
         setLogdata({email:'',password:''});
+        
+        const result= await axios.post('/get-user');
+        setUser(result.data);
+        props.handleModalCancel();
+        setLoading(false);
+        setOtpform(false);
+        success("Logged In successfully");
+
+       }catch(err)
+       {
+         error("Invalid Credentials");
+         setLoading(false);
+
+       }
 
     }
+
+  const handleForgetSubmit=async (e)=>{
+  e.preventDefault();
+  setLoading(true);
+
+ try{
+const result=await axios.post('/forget',{email:forgetpass.email})
+success("Reset Link sent to Mail Successfully");
+setLoading(false);
+setForgetPass({email:'',flag:false});
+setOtpform(false);
+props.handleModalCancel();
+
+ }catch{
+  error("User not found");
+  setLoading(false);
+
+ }
+ 
+
+  }  
+
   return (
     <>
-   
-    
+    {contextHolder}
+    <Spin tip="Loading...." size='large' spinning={loading}>
+   {
+    (!otpform)?
     <div className="fcontainer mt-4"> 
         <div className='row mx-1'>
        <div className="sign-up active col-6" id="sign-up-button" onClick={()=>{setFormFlag('reg')}}>
@@ -171,7 +256,6 @@ if(each.checked){role=each.value}
        <div className="header">
         <h1>Sign Up for Free</h1>
        </div>
-       {rsub?<p>Fill the Required Fields</p>:null}
        <div className='radio-buttons d-flex justify-content-around'>
         <label className='mt-1'>I AM </label>
         <label><input type="radio" name="role" value="customer" />{" "}User</label>
@@ -182,6 +266,7 @@ if(each.checked){role=each.value}
        {!ValData.name?<p>First name should be greater than one letter and Have No numbers</p>:null}
        <input type="email" name='email' placeholder="Email Address*" required value={FormData.email} onChange={handleFormData}/>
        {!ValData.email?<p>Email should contain @ and . symbols</p>:null}
+       
        <input type="text" name='mobile' placeholder="Mobile Number*" required value={FormData.mobile} onChange={handleFormData}/>
        
        {!ValData.mobile?<p>Mobile Number should contain 10 digits</p>:null}
@@ -203,18 +288,35 @@ if(each.checked){role=each.value}
       <div className="header">
         <h1>Welcome back!</h1>
       </div>
-      {message}
       <input className="email" name='email' type="email" placeholder="Email Address*" required value={LogData.email} onChange={handleLogData}/>
      <div style={{position:'relative'}}> <input  type={!psicon?'password':'text'} name='password' placeholder="Your password*" required value={LogData.password} onChange={handleLogData}/>{' '}{psicon?<FaEyeSlash className='passicon' onClick={()=>{setPsicon(!psicon);}} />:<FaEye className='passicon' onClick={()=>{setPsicon(!psicon)}} />}</div>
      
-      <div className="password">
+      <div className="password" onClick={showForget}>
         Forgot Password?
       </div>
       <button id="log-in-submit mb-6">Log in</button><br></br>
       <center>If you Are Not Registered,Please <a>Sign Up</a></center>
     </form>
 
-  </div>
+    </div>
+    :
+    (!forgetpass.flag)?
+    <div>
+      <p className='fs-4'>Enter the OTP sent to your Mail {FormData.email.slice(0,5)}....</p>
+      <center> <Input.OTP length={6} {...sharedProps} /><br/>
+      <Button onClick={()=>{setOtpform(false);}} className='mt-3' type='primary'>Back To register</Button>
+      </center>
+    </div>:
+       <div className='fcontainer mt-4'>
+       <form  method='POST' onSubmit={handleForgetSubmit}>
+        <div className="header">
+          <h1>Reset Password</h1>
+        </div>
+        <input className="email" name='email' type="email" placeholder="Email Address*" value={forgetpass.email} onChange={(e)=>{setForgetPass((prev)=>({...prev,email:e.target.value}))}} required/>
+        <button id="log-in-submit mb-6">Send Reset Link</button><br></br>
+      </form>
+          </div>
+}</Spin>
   </>
    );
 }

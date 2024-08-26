@@ -10,11 +10,12 @@ import { MdOutlineMenu } from "react-icons/md";
 import { FaUser,FaUserPlus,FaClipboardList } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { TbCurrentLocation } from "react-icons/tb";
-
-
-import { useState } from "react";
+import { useState ,useContext} from "react";
 import logo from './log1.png';
-import SigninReg from '../Login/Login.js'
+import SigninReg from '../Login/Login.js';
+import userContext from "../Login/UserContext.js";
+import axios from "axios";
+
 
 const { Search } = Input;
 
@@ -25,6 +26,8 @@ const [searchVisible,setsearchVisible]=useState('none');
 const [drawerVisible,setDrawervisible]=useState(false);
 const [isModalOpen,setModalOpen]=useState(false);
 const [isLoginOpen,setLoginOpen]=useState(false);
+const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
+const [otpform,setOtpform]=useState(false);
 
 const showDrawer=()=>
 {
@@ -49,6 +52,7 @@ const handleSearchVisible=()=>{
 const handleModalCancel=()=>{
   setModalOpen(false);
   setLoginOpen(false);
+  setOtpform(false);
 }
 
 const handleLocation=()=>{
@@ -58,9 +62,26 @@ setModalOpen(true);
 }
 const handleLogin=()=>{
     setLoginOpen(true);
+    closeDrawer();
 }
 
+const handleLogout=async ()=>{
+setLoading(true);
+closeDrawer();
+try{
 
+  await axios.post('/logout')
+   success("logged out successfully");
+   setUser(null);
+   setLoading(false);
+
+}
+catch{
+error("something went wrong")
+setLoading(false);
+}
+
+}
 
 
 
@@ -109,7 +130,11 @@ const handleLogin=()=>{
               <li className="mt-1" ><MdHomeRepairService className="mb-1 " /> Services</li>
               <li className="mt-1" ><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</li>
               <li className="mt-1 search-bar-nav" onClick={handleSearchVisible} ><FaSearch className="mb-1 fs-5" /> </li>
-              <li className="mt-1"><Button type="primary" size="small" onClick={handleLogin}><FaUser/> Log In</Button></li>
+             {
+              (!user)?<li className="mt-1"><Button type="primary" size="small" onClick={handleLogin}><FaUser/> Log In</Button></li>
+                   :<><li className="mt-1"><FaUser/>{" "+user.name.slice(0,5)}</li>
+                    <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
+              }
               <li className="fs-4"><FaCartShopping /></li>
             </ul>
 
@@ -149,10 +174,12 @@ const handleLogin=()=>{
         >
    <div className="container">
    <ul type="none" className="d-flex flex-column">
-              <li><Button block><FaUserPlus/> Sign Up</Button></li>
               <hr></hr>
-              <li className="my-1"><Button type="primary" block  onClick={handleLogin} ><FaUser/> Log In</Button></li>
-              <hr></hr>
+              {
+              (!user)?<li className="mt-1"><Button type="primary" size="small" onClick={handleLogin}><FaUser/> Log In</Button></li>
+                   :<><li className="mt-1"><FaUser/>{" "+user.name.slice(0,5)}</li>
+                    <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
+              }              <hr></hr>
 
               <li  className="my-1" ><AiFillHome className="mb-1 " /> Home</li>
               <hr></hr>
@@ -180,7 +207,7 @@ const handleLogin=()=>{
 
       </Modal>
       <Modal open={isLoginOpen} onCancel={handleModalCancel} footer={null}>
-      <SigninReg/>
+      <SigninReg  handleModalCancel={handleModalCancel} otpform={otpform} setOtpform={setOtpform} />
       </Modal>
       
     </>
