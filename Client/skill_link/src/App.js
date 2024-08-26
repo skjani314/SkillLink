@@ -6,9 +6,9 @@ import Nav from './Nav';
 import Nlogin from './Nlogin'
 function App() {
   return (
-   <>
-   <Nlogin/>
-   </>
+<>
+<Nlogin/>
+</>
   );
 }
 

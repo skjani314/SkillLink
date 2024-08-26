@@ -1,0 +1,23 @@
+.search-bar-nav{
+    display: none;
+
+}
+
+.original-search-bar-nav{
+    display: block;
+}
+.menu-bar-nav{
+    display: block;
+}
+
+
+
+@media (max-width: 992px) {
+    .search-bar-nav {
+      display: block;
+    }
+    .original-search-bar-nav {
+        display: none;
+      }
+  }
+
