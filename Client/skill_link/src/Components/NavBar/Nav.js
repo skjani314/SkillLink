@@ -1,7 +1,7 @@
 import { AiFillHome } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoLocation } from "react-icons/io5";
-import { Button, Col, Input, Row,Drawer,Modal } from 'antd';
+import { Button, Col, Input, Row,Drawer,Modal, Card, Skeleton } from 'antd';
 import { MdHomeRepairService } from "react-icons/md";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { FaSearch } from "react-icons/fa";
@@ -15,7 +15,8 @@ import logo from './log1.png';
 import SigninReg from '../Login/Login.js';
 import userContext from "../Login/UserContext.js";
 import axios from "axios";
-
+import Locsuggest from "./Locsuggest.js";
+import {Link} from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -28,6 +29,10 @@ const [isModalOpen,setModalOpen]=useState(false);
 const [isLoginOpen,setLoginOpen]=useState(false);
 const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
 const [otpform,setOtpform]=useState(false);
+const [locsuggest,setLocSuggest]=useState([]);
+const [locSearch,setLocSearch]=useState('');
+const [currLocation,setCurrLocation]=useState('Ongole');
+const [locSkeleton,setLocSkeleton]=useState(false);
 
 const showDrawer=()=>
 {
@@ -55,9 +60,32 @@ const handleModalCancel=()=>{
   setOtpform(false);
 }
 
-const handleLocation=()=>{
 
-setModalOpen(true);  
+const handleLocSearch=async (e)=>
+{
+setLocSearch(e.target.value);
+setLocSkeleton(true);
+const response=await axios.get(`https://photon.komoot.io/api/?q=${locSearch}`);
+ const arrData=response.data.features.filter((each)=>{
+
+const {properties} =each;
+if(properties.country=="India")
+  {
+    return properties;
+  }
+
+
+ })
+ setLocSkeleton(false);
+setLocSuggest(prev=>([...arrData]));
+
+}
+
+
+const handleLocation=async ()=>{
+
+setModalOpen(true);
+
 
 }
 const handleLogin=()=>{
@@ -92,13 +120,13 @@ setLoading(false);
       <nav className="container-fluid  pt-2">
         <Row>
           <Col lg={3} md={3} sm={4} xs={10}>
-            <a><img src={logo} className="img-fluid" /></a>
+            <Link to='/'><img src={logo} className="img-fluid" /></Link>
           </Col>
           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:5}}>
           <FaSearch onClick={handleSearchVisible} className="fs-2 mt-2"/>
           </Col>
           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:0}}>
-          <FaCartShopping className="fs-2 mt-2" />
+          <Link to='/cart' className="Link"><FaCartShopping className="fs-2 mt-2" /></Link>
            </Col>
           <Col className="d-block d-sm-none mt-1" xs={{span:2,offset:0}}>
           <MdOutlineMenu className="fs-2 mt-2" onClick={showDrawer}/>
@@ -115,27 +143,29 @@ setLoading(false);
             />
           </Col>
 
-          <Col className="mt-2 d-flex  p-0" lg={2} onClick={handleLocation} style={{cursor:'pointer'}}>
+          <Col className="mt-2 d-flex  p-0" lg={3} onClick={handleLocation} style={{cursor:'pointer'}}>
 
             <IoLocation className="original-search-bar-nav" fontSize="30px" color="red" />
-            <p className="mt-2 original-search-bar-nav me-2">Ongole</p>
-            <IoIosArrowDown className="mt-2 original-search-bar-nav" fontSize="20px"/>
+            <p className="mt-2 original-search-bar-nav me-2 d-flex">
+              <p className="original-search-bar-nav">{currLocation}</p>
+            <IoIosArrowDown className="original-search-bar-nav" fontSize="20px"/>
+            </p>
 
           </Col>
 
-          <Col className="mt-2 d-none d-sm-block menu-bar-nav" lg={{span:10,offset:1}} md={{span:15,offset:6}} sm={{span:21,offset:0}} >
+          <Col className="mt-2 d-none d-sm-block menu-bar-nav" lg={{span:10,offset:0}} md={{span:15,offset:6}} sm={{span:21,offset:0}} >
 
             <ul type="none" className="d-flex justify-content-around">
-              <li  className="mt-1" ><AiFillHome className="mb-1 " /> Home</li>
-              <li className="mt-1" ><MdHomeRepairService className="mb-1 " /> Services</li>
-              <li className="mt-1" ><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</li>
+              <li  className="mt-1" ><Link to='/' className="Link"><AiFillHome className="mb-1 " /> Home</Link></li>
+              <li className="mt-1" ><Link to='/services' className="Link" ><MdHomeRepairService className="mb-1 " /> Services</Link></li>
+              <li className="mt-1" ><Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</Link></li>
               <li className="mt-1 search-bar-nav" onClick={handleSearchVisible} ><FaSearch className="mb-1 fs-5" /> </li>
              {
               (!user)?<li className="mt-1"><Button type="primary" size="small" onClick={handleLogin}><FaUser/> Log In</Button></li>
                    :<><li className="mt-1"><FaUser/>{" "+user.name.slice(0,5)}</li>
                     <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
               }
-              <li className="fs-4"><FaCartShopping /></li>
+              <li className="fs-4"><Link to='/cart' className="Link"><FaCartShopping /></Link></li>
             </ul>
 
           </Col>
@@ -157,7 +187,7 @@ setLoading(false);
               <Col className="mt-1 d-flex p-0" span={24} onClick={handleLocation}>
 
                 <IoLocation fontSize="30px" color="red" />
-                <p className="mt-2  me-2">Ongole</p>
+                <p className="mt-2  me-2">{currLocation}</p>
                 <IoIosArrowDown className="mt-2 " fontSize="20px"/>
 
               </Col>
@@ -181,14 +211,14 @@ setLoading(false);
                     <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
               }              <hr></hr>
 
-              <li  className="my-1" ><AiFillHome className="mb-1 " /> Home</li>
+              <li  className="my-1" ><Link to='/' className="Link"><AiFillHome className="mb-1 " /> Home</Link></li>
               <hr></hr>
 
-              <li className="my-1" ><MdHomeRepairService className="mb-1 " /> Services</li>
+              <li className="my-1" ><Link to='/services' className="Link"><MdHomeRepairService className="mb-1 " /> Services</Link> </li>
               <hr></hr>
-              <li className="my-1" ><FaClipboardList className="mb-1 " /> My Orders</li>
+              <li className="my-1" ><Link to='' className="Link"><FaClipboardList className="mb-1 " /> My Orders</Link></li>
               <hr></hr>
-              <li className="my-1" ><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</li>
+              <li className="my-1" ><Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</Link></li>
                            <hr></hr>
 
             </ul>
@@ -200,8 +230,26 @@ setLoading(false);
       <Modal open={isModalOpen} onCancel={handleModalCancel} footer={null}>
         <Row>
            <Col offset={2} span={20}>
-           <Search allowClear size="medium" enterButton />
+           <Search allowClear size="medium" enterButton value={locSearch} onChange={handleLocSearch} />
           <p className="mt-2 text-primary"> <TbCurrentLocation className="fs-3"/> Use Current Location</p>
+          <div className="d-flex flex-column" style={{background:'whitesmoke'}} >
+            {
+              locSearch?
+               
+              !locSkeleton?
+              locsuggest.map((each)=>(
+
+                <Locsuggest key={each.properties.osm_id} name={each.properties.name} state={each.properties.state} postcode={each.properties.postcode} 
+                handleModalCancel={handleModalCancel}
+                setCurrLocation={setCurrLocation}
+                setLocSearch={setLocSearch}
+                />
+              )):<Skeleton rows={2} size="small" active/>
+              
+              :null
+              
+            }
+           </div>
            </Col>
         </Row>
 
@@ -209,7 +257,6 @@ setLoading(false);
       <Modal open={isLoginOpen} onCancel={handleModalCancel} footer={null}>
       <SigninReg  handleModalCancel={handleModalCancel} otpform={otpform} setOtpform={setOtpform} />
       </Modal>
-      
     </>
   )
 }

@@ -1,0 +1,44 @@
+.responsive-text {
+    font-size: 18px;
+    overflow: hidden;
+  }
+ 
+
+  @media (max-width: 1075px) {
+    .responsive-text {
+      font-size: 14px;
+
+    }
+  }
+  @media (max-width: 745px) {
+    .responsive-text {
+      font-size: 10px;
+    }
+  }
+  
+ 
+
+  @media (max-width: 575px) {
+    .responsive-text {
+      font-size: 18px;
+    }
+  }
+  @media (max-width: 408px) {
+    .responsive-text {
+      font-size: 14px;
+    }
+  }
+  @media (max-width: 358px) {
+    .responsive-text {
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 308px) {
+    .responsive-text {
+      font-size: 6px;
+    }
+  }
+
+  .sr-card:hover{
+    color: black;
+  }

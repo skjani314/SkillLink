@@ -9,7 +9,8 @@ import axios from 'axios';
 import userContext from './Components/Login/UserContext';
 import {message} from 'antd';
 import Forgotpass from './Components/Login/Forgotpass';
-
+import ServicePage from './Pages/Service/ServicePage';
+import Cart from './Pages/Cart/Cart';
 
 
 function App() {
@@ -63,10 +64,13 @@ const data={user,setUser,loading,setLoading,success,error,contextHolder}
   return (
   <>
   <userContext.Provider value={data}>
+
   <BrowserRouter>
     <Routes>
        <Route path='/' element={<Home/>} />
        <Route path='/forgot/:token'element={<Forgotpass/>} />
+       <Route path='/services' element={<ServicePage/>}  />
+       <Route path='/cart' element={<Cart/>}/>
     </Routes>
   </BrowserRouter>
   </userContext.Provider>

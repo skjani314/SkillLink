@@ -1,0 +1,25 @@
+.slick-prev, .slick-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10%;
+  z-index: 2;
+}
+
+.slick-prev {
+  left: 10px;
+}
+
+.slick-next {
+  right: 10px;
+}
+
+.slick-slide > div {
+  margin: 0 10px; 
+}
+
+.slick-list {
+  margin: 0 -10px;
+}
+

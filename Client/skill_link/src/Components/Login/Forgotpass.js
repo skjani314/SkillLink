@@ -1,10 +1,10 @@
-import { Row,Col, Spin } from 'antd';
+import { Row,Col, Spin, Button } from 'antd';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from 'axios';
 import React, { useEffect, useState ,useContext} from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams,Link } from 'react-router-dom';
 import userContext from './UserContext';
-
+import sucimg from './passchange.png'
 const Forgotpass = props => {
 
 const [FormData,setFormData]=useState({password:'',cpassword:''});
@@ -19,7 +19,7 @@ const {token}=useParams();
 const {success,error,loading,setLoading,contextHolder}=useContext(userContext);
 let ismount=true;
 const [verified,setverified]=useState(false);
-const navigate=useNavigate();
+const [isChanged,setIsChanged]=useState(false);
 
 
 useEffect(()=>{
@@ -93,12 +93,13 @@ if(ValData.password && ValData.cpassword)
     setLoading(true);
 
     try{
-
-      await axios.post('/passchange',{token:token,Password:FormData.Password})
+      await axios.post('/passchange',{token:token,data:FormData},{withCredentials:true})
       success("password changed successfully");
       setLoading(false);
       setFormData((prev)=>({password:'',cpassword:''}));
-       navigate("/");
+      setIsChanged(true);
+      setverified(false);
+
     }
     catch(err)
     {
@@ -151,13 +152,20 @@ if(ValData.password && ValData.cpassword)
       </form>
     </div>
     :
-
+    !isChanged?
    <div className='fcontainer'>
       <h1>
       Link Expired
       </h1>
       <img src='https://ih1.redbubble.net/image.1937257523.0326/st,small,507x507-pad,600x600,f8f8f8.jpg' className='img-fluid'/>
    </div>
+   :  <div className='fcontainer'>
+   <h1>
+   Password Changed successfully
+   </h1>
+   <img src={sucimg} className='img-fluid'/>
+   <Button><Link to='/' className="Link">Login Now</Link></Button>
+</div>
     }
     </Col>
   </Row>  
