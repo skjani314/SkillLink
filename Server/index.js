@@ -8,6 +8,9 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 import Otp from './models/Otp.js';
+import services from './models/services.js';
+import serprocost from './models/serprocost.js';
+import locservice from './models/locserviceSchema.js';
 
 dotenv.config();
 const app = express();
