@@ -8,9 +8,16 @@ import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import nodemailer from 'nodemailer';
 import Otp from './models/Otp.js';
+import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
+import fs from 'fs';
+
+
+
 
 dotenv.config();
 const app = express();
+const upload_file = multer({ dest: 'uploads/' });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(cookieParser());
@@ -25,6 +32,42 @@ mongoose.connect('mongodb+srv://skskjani7:' + process.env.PASSWORD + '@users.3ky
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+app.use(upload_file.array('img'));
+
+cloudinary.config({ 
+  cloud_name: 'dyominbfs', 
+  api_key: process.env.CLOUDNIR_API_KEY, 
+  api_secret: process.env.CLOUDNIR_API_SECRET,
+});
+
+
+app.post('/test',async (req,res,next)=>{
+
+try{
+
+ const result = await cloudinary.uploader.upload(req.files[0].path, {
+  folder: 'users', 
+  public_id:'jani'
+});
+
+fs.unlinkSync(req.files[0].path);
+
+res.json({
+  message: 'Image uploaded successfully',
+  url: result.secure_url,
+});
+
+
+}
+catch(err)
+{
+next(err)
+}
+
+})
+
+
+
 
 app.post('/passchange', async (req, res, next) => {
 
