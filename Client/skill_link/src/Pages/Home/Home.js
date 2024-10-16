@@ -22,45 +22,16 @@ const { useBreakpoint } = Grid;
 const Home = props => {
 
 
-    const data = [
-       
-        {
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-            name: "Cleaning Bathroom",
+   
 
-            available: 12,
-            from: 500
-        },
-        {
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-            name: "Cleaning Bathroom",
+const {user,setUser,loading,setLoading,success,error,contextHolder,currLocation,  servicesData,}=useContext(userContext);
 
-            available: 12,
-            from: 500
-        },
-        {
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-            name: "Cleaning Bathroom",
 
-            available: 12,
-            from: 500
-        },
-        {
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-            name: "Cleaning Bathroom",
-
-            available: 12,
-            from: 500
-        },
-
-    ]
-
-    const { loading, contexHolder } = useContext(userContext);
     const screens = useBreakpoint();
 
     return (
-        <>
-            {contexHolder}
+        <> 
+            {contextHolder}
             <Spin tip="Loading...." size='large' spinning={loading}>
                 <Nav />
                 <Carousel infinite autoplay arrows className='my-5' centerMode={true} dots={false} nextArrow={<MdArrowForwardIos color='red' size='large' />} prevArrow={<MdArrowBackIos color='red' size={30} />} >
@@ -85,7 +56,7 @@ const Home = props => {
                             <h3 className='container-fluid fs-3 p-3 text-warning'>Recommended Services</h3>
                             <div className='my-2'>
 
-                                <ServiceSlider data={data} />
+                                <ServiceSlider data={servicesData} />
                             </div>
                         </div>
                         : <Row>
@@ -93,7 +64,7 @@ const Home = props => {
                                 <ServiceGrid
                                     bgcolor="skyblue"
                                     heading={{ title: "Most Booked services", color: "#2f4f4f" }}
-                                    data={data} 
+                                    data={servicesData} 
                                 />
                             </Col>
 
@@ -104,14 +75,14 @@ const Home = props => {
                         <ServiceGrid
                             bgcolor="skyblue"
                             heading={{ title: "Most Booked services", color: "#2f4f4f" }}
-                            data={data} 
+                            data={servicesData} 
                         />
                     </Col>
                     <Col md={{ span: 12 }} sm={{ span: 12 }} xs={{ span: 24 }}>
                         <ServiceGrid
                             bgcolor="#f2f2f2"
                             heading={{ title: "Home Services", color: "#556b2f" }}
-                            data={data} 
+                            data={servicesData} 
                         />
                     </Col>
                 </Row>
@@ -122,7 +93,7 @@ const Home = props => {
                             <h3 className='container-fluid fs-3 p-3 text-dark'>Trending Services</h3>
                             <div className='my-2'>
 
-                                <ServiceSlider data={data} />
+                                <ServiceSlider data={servicesData} />
                             </div>
                         </div>
                         : <Row>
@@ -130,7 +101,7 @@ const Home = props => {
                                 <ServiceGrid
                                     bgcolor="skyblue"
                                     heading={{ title: "Most Booked services", color: "#2f4f4f" }}
-                                    data={data} 
+                                    data={servicesData} 
                                 />
                             </Col>
 
@@ -143,7 +114,7 @@ const Home = props => {
                         <ServiceGrid
                             bgcolor="#f4f0ff"
                             heading={{ title: "Most Booked services", color: "#4b0082" }}
-                            data={data} 
+                            data={servicesData} 
 
                         />
                     </Col>
@@ -151,7 +122,7 @@ const Home = props => {
                         <ServiceGrid
                             bgcolor="#f9f5f1"
                             heading={{ title: "Home Services", color: "#8b4513" }}
-                            data={data} 
+                            data={servicesData} 
 
                         />
                     </Col>

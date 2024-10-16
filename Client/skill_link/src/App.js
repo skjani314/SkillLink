@@ -77,8 +77,11 @@ const data={
     const getData=async ()=>{
 try{
  
-    const result=await axios.get('/locservices?location=522403');
-    console.log(result);
+const result=await axios.get('/locservices?location='+522403);
+
+setServicesData((prev)=>([...result.data]));
+
+
 }
 catch(err){
   error("something went wrong");
@@ -86,7 +89,7 @@ catch(err){
     }
 
   if(!flag){
-  getUser();
+  // getUser();
 getData();
 }
   return ()=>{flag=true;}

@@ -21,7 +21,7 @@ import {Link} from 'react-router-dom';
 const { Search } = Input;
 
 function Nav() {
-
+ 
 
 const [searchVisible,setsearchVisible]=useState('none');
 const [drawerVisible,setDrawervisible]=useState(false);
@@ -194,7 +194,7 @@ setLoading(false);
           </Row>
         </Row>
         <Drawer 
-        visible={drawerVisible}
+        open={drawerVisible}
         onClose={closeDrawer}
         placement="right"
         title="Menu"

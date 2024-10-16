@@ -31,7 +31,8 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://3000-skjani314-skilllink-253exn3hffq.ws-us116.gitpod.io/',
+  methods:['GET','POST','PUT','DELETE'],
   credentials: true,
 }))
 
@@ -275,9 +276,7 @@ app.get('/locservices', async (req, res, next) => {
 
   try {
 
-    const { location } = req.params;
-   console.log(req.params);
-
+    const { location } = req.query;
    const locservices = await locservice.find({ location });
 
     const services_inc = await Promise.all(

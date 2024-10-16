@@ -41,6 +41,7 @@ const ServiceCard = props => {
         },
     ]
 
+
     const screens = useBreakpoint();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -50,20 +51,21 @@ const ServiceCard = props => {
       const handleCancel = () => {
         setIsModalOpen(false);
       };
+
     return (
         <>
         <div className='m-1' onClick={showModal}>
             {!props.mobile ?
                 <Card
                     hoverable
-                    cover={<img alt="example" height={200} width={150} className='p-2' src={props.data.imgurl} />}
+                    cover={<img alt="example" height={200} width={150} className='p-2' src={props.data.img} />}
                     className='my-3'
                     style={{ background: 'white' }}
                 >
                     <Text level={4} style={{ color: 'black' }} className='responsive-text'><b>{props.data.name}</b> </Text> <br></br>
 
-                    <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.available}</b></Text> <br></br>
-                    <Text className='responsive-text'> <FaRupeeSign color='blue' size={screens.xs ? 15 : screens.md ? 15 : 10} />From :<b>{props.data.from}</b></Text>
+                    <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.service_providers.length}</b></Text> <br></br>
+                    <Text className='responsive-text'> <FaRupeeSign color='blue' size={screens.xs ? 15 : screens.md ? 15 : 10} />From :<b>{props.data.max}</b></Text>
                 </Card>
                 :
                 <Card
@@ -71,13 +73,13 @@ const ServiceCard = props => {
                 >
                     <Row className='d-flex jusify-content-around align-items-center'>
 
-                        <Avatar size={80} shape='square' icon={<img src={props.data.imgurl} />} />
+                        <Avatar size={80} shape='square' icon={<img src={props.data.img} />} />
 
                         <div className='d-flex flex-column justify-content-center m-3'>
                             <Text level={4} style={{ color: 'black' }} className='responsive-text'><b>{props.data.name}</b> </Text>
 
-                            <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.available}</b></Text>
-                            <Text className='responsive-text'> <FaRupeeSign color='blue' size={screens.xs ? 15 : screens.md ? 15 : 10} />From :<b>{props.data.from}</b></Text>
+                            <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.service_providers.length}</b></Text>
+                            <Text className='responsive-text'> <FaRupeeSign color='blue' size={screens.xs ? 15 : screens.md ? 15 : 10} />From :<b>{props.data.max}</b></Text>
 
                         </div>
                     </Row>
