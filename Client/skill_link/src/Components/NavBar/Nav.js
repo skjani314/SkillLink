@@ -27,11 +27,10 @@ const [searchVisible,setsearchVisible]=useState('none');
 const [drawerVisible,setDrawervisible]=useState(false);
 const [isModalOpen,setModalOpen]=useState(false);
 const [isLoginOpen,setLoginOpen]=useState(false);
-const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
+const {user,setUser,loading,setLoading,success,error,contextHolder,currLocation,setCurrLocation}=useContext(userContext);
 const [otpform,setOtpform]=useState(false);
 const [locsuggest,setLocSuggest]=useState([]);
 const [locSearch,setLocSearch]=useState('');
-const [currLocation,setCurrLocation]=useState('Ongole');
 const [locSkeleton,setLocSkeleton]=useState(false);
 
 const showDrawer=()=>
@@ -132,7 +131,7 @@ setLoading(false);
           <MdOutlineMenu className="fs-2 mt-2" onClick={showDrawer}/>
            </Col>
 
-          <Col lg={1}></Col>
+          <Col lg={1}></Col> 
           <Col className="mt-1 original-search-bar-nav" lg={7}>
             <Search
               allowClear
@@ -147,7 +146,7 @@ setLoading(false);
 
             <IoLocation className="original-search-bar-nav" fontSize="30px" color="red" />
             <p className="mt-2 original-search-bar-nav me-2 d-flex">
-              <p className="original-search-bar-nav">{currLocation}</p>
+              <p className="original-search-bar-nav">{currLocation.name}</p>
             <IoIosArrowDown className="original-search-bar-nav" fontSize="20px"/>
             </p>
 
@@ -187,7 +186,7 @@ setLoading(false);
               <Col className="mt-1 d-flex p-0" span={24} onClick={handleLocation}>
 
                 <IoLocation fontSize="30px" color="red" />
-                <p className="mt-2  me-2">{currLocation}</p>
+                <p className="mt-2  me-2">{currLocation.name}</p>
                 <IoIosArrowDown className="mt-2 " fontSize="20px"/>
 
               </Col>
