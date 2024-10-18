@@ -17,7 +17,7 @@ function App() {
 
 
 const [messageApi, contextHolder] = message.useMessage();
-const [currLocation,setCurrLocation]=useState({name:'Ongole',pincode:523001});
+const [currLocation,setCurrLocation]=useState({name:'Ongole',pincode:523002});
 const [servicesData,setServicesData]=useState([]);
 const [user,setUser]=useState(null);
 const [loading,setLoading]=useState(false);
@@ -77,10 +77,10 @@ const data={
     const getData=async ()=>{
 try{
  
-const result=await axios.get('/locservices?location='+522403);
+const result=await axios.get('/locservices?location='+currLocation.pincode);
 
-setServicesData((prev)=>([...result.data]));
-
+setServicesData([...result.data]);
+console.log(result);
 
 }
 catch(err){

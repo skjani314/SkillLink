@@ -18,9 +18,8 @@ import fs from 'fs';
 import agents from './models/agents.js';
 import orders from './models/orders.js';
 import address from './models/address.js';
-
-
-
+import smtpTransport from 'nodemailer-smtp-transport';
+import axios from 'axios';
 
 dotenv.config();
 const app = express();
@@ -31,8 +30,8 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: 'https://3000-skjani314-skilllink-253exn3hffq.ws-us116.gitpod.io/',
-  methods:['GET','POST','PUT','DELETE'],
+  origin: 'https://3000-skjani314-skilllink-76payofl55d.ws-us116.gitpod.io/',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
 
@@ -77,189 +76,183 @@ app.post('/test', async (req, res, next) => {
 
 
 
-app.post('address',async (req,res,next)=>{
+app.post('address', async (req, res, next) => {
 
 
-try{
+  try {
 
-const {addr,customer_id,pincode}=req.body;
+    const { addr, customer_id, pincode } = req.body;
 
-const result=await address.create({address:addr,customer_id,pincode})
+    const result = await address.create({ address: addr, customer_id, pincode })
 
-res.json(result);
-}  
-catch(err)
-{
-  next(err);
-}
-
-
-
-})
-
-
-app.get('address',async (req,res,next)=>{
-
-try{
-
-const {customer_id}=req.body;
-
-const result=await address.find(customer_id);
-res.json(result);
-}
-catch(err)
-{
-  next(err);
-}
-
-})
-
-app.put('/address',async (req,res,next)=>{
-
-try{
-
-const {id,addr,pincode}=req.body;  
-const result=await address.findByIdAndUpdate({_id:id},{address:addr,pincode},{new:true});
-res.json(result);
-}
-catch(err)
-{
-  next(err);
-}
+    res.json(result);
+  }
+  catch (err) {
+    next(err);
+  }
 
 
 
 })
 
 
-app.delete('/order',async (req,res,next)=>{
+app.get('address', async (req, res, next) => {
 
+  try {
 
-try{
+    const { customer_id } = req.body;
 
-const {id}=req.body;
+    const result = await address.find(customer_id);
+    res.json(result);
+  }
+  catch (err) {
+    next(err);
+  }
 
-const order_details=await orders.findById(id);
+})
 
-if(order_details.status=='cart'){
+app.put('/address', async (req, res, next) => {
 
-const result=await orders.deleteOne({_id:id});
+  try {
 
-res.json(result);
-
-}
-else{
-  res.json("have nothing to delete");
-}
-
-}  
-catch(err)
-{
-
-  next(err);
-}
+    const { id, addr, pincode } = req.body;
+    const result = await address.findByIdAndUpdate({ _id: id }, { address: addr, pincode }, { new: true });
+    res.json(result);
+  }
+  catch (err) {
+    next(err);
+  }
 
 
 
 })
 
 
-app.post('/orders',async (req,res,next)=>{
+app.delete('/order', async (req, res, next) => {
 
 
-try{
+  try {
 
-const {customer_id,ser_pro_cost,address}=req.body;
+    const { id } = req.body;
+
+    const order_details = await orders.findById(id);
+
+    if (order_details.status == 'cart') {
+
+      const result = await orders.deleteOne({ _id: id });
+
+      res.json(result);
+
+    }
+    else {
+      res.json("have nothing to delete");
+    }
+
+  }
+  catch (err) {
+
+    next(err);
+  }
 
 
-const result=await orders.create({customer_id,ser_pro_cost,address,status:'cart'});
-res.json(result);
+
+})
 
 
-}  
-catch(err){
-  next(err)
-}
+app.post('/orders', async (req, res, next) => {
+
+
+  try {
+
+    const { customer_id, ser_pro_cost, address } = req.body;
+
+
+    const result = await orders.create({ customer_id, ser_pro_cost, address, status: 'cart' });
+    res.json(result);
+
+
+  }
+  catch (err) {
+    next(err)
+  }
 
 
 
 });
 
 
-app.get('/orders',async (req,res,next)=>{
+app.get('/orders', async (req, res, next) => {
 
 
-try{
+  try {
 
-const {ser_pro_cost,customer_id,status}=req.body;
+    const { ser_pro_cost, customer_id, status } = req.body;
 
-if(ser_pro_cost!=null){
-const result=await orders.find({ser_pro_cost,status:{$ne:'cart'}});
-res.json(result);
-}
-else if(customer_id!=null && status=='cart')
-{
+    if (ser_pro_cost != null) {
+      const result = await orders.find({ ser_pro_cost, status: { $ne: 'cart' } });
+      res.json(result);
+    }
+    else if (customer_id != null && status == 'cart') {
 
-const result =await orders.find({customer_id,status:'cart'});
-res.json(result);
+      const result = await orders.find({ customer_id, status: 'cart' });
+      res.json(result);
 
-}
-else if(customer_id!=null){
-  const result=await orders.find({customer_id,status:{$ne:'cart'}});
-  res.json(result);
+    }
+    else if (customer_id != null) {
+      const result = await orders.find({ customer_id, status: { $ne: 'cart' } });
+      res.json(result);
 
-}
-else{
-  next(new Error('unable to find orders'));
-}
+    }
+    else {
+      next(new Error('unable to find orders'));
+    }
 
-}
-catch(err)
-{
-  next(err)
-}
+  }
+  catch (err) {
+    next(err)
+  }
 
 
 
 
 })
 
-app.put('/orders',async (req,res,next)=>{
+app.put('/orders', async (req, res, next) => {
 
-try{
+  try {
 
-const {order_id,status}=req.body;
+    const { order_id, status } = req.body;
 
-const result=await orders.findByIdAndUpdate({_id:order_id},{status},{ new: true })
+    const result = await orders.findByIdAndUpdate({ _id: order_id }, { status }, { new: true })
 
-res.json(result);
+    res.json(result);
 
-}
-catch(err){
-  next(err);
-}
+  }
+  catch (err) {
+    next(err);
+  }
 
 
 
 })
 
 //details of service providers
-app.get('/serviceproviders',async (req,res,next)=>{
+app.get('/serviceproviders', async (req, res, next) => {
 
-try{
+  try {
 
-const {ser_id}=req.body;
+    const { ser_id } = req.query;
 
-const ser_result=await serviceProviders.findById(ser_id);
-const {name,img}=await User.findById(ser_result.user_id);
+    const { proffision, rating, user_id } = await serviceProviders.findOne({ _id: ser_id });
+    const { name, img } = await User.findById(user_id);
 
-res.json({...ser_result,name,img})
+    res.json({ proffision, rating, name, img })
 
 
-}
-catch(err){
-  next(err)
-}
+  }
+  catch (err) {
+    next(err)
+  }
 
 
 
@@ -269,7 +262,36 @@ catch(err){
 
 
 
+app.put('/locservices', async (req, res, next) => {
 
+
+  try {
+
+    const { cost, time, id } = req.query;
+
+    if (cost != null && time != null) {
+      const result = await serprocost.findByIdAndUpdate({ _id: id }, { cost, time }, { new: true });
+      res.json(result);
+    }
+    else if (cost != null) {
+      const result = await serprocost.findByIdAndUpdate({ _id: id }, { cost }, { new: true });
+      res.json(result);
+    }
+    else if (time != null) {
+      const result = await serprocost.findByIdAndUpdate({ _id: id }, { time }, { new: true });
+      res.json(result);
+    }
+    else {
+      next(new Error('there is nothing to update'));
+    }
+
+  }
+  catch (err) {
+
+    next(err);
+  }
+
+});
 
 //to get services data by location (admin)
 app.get('/locservices', async (req, res, next) => {
@@ -277,7 +299,7 @@ app.get('/locservices', async (req, res, next) => {
   try {
 
     const { location } = req.query;
-   const locservices = await locservice.find({ location });
+    const locservices = await locservice.find({ location });
 
     const services_inc = await Promise.all(
       locservices.map(async (each) => {
@@ -285,13 +307,12 @@ app.get('/locservices', async (req, res, next) => {
         const { ser_id } = each;
         const each_service = await services.findById(ser_id);
         const service_providers = await serprocost.find({ ser_loc_id: each._id });
-        let max=0;
-        for(let i=0;i<service_providers.length;i++)
-          {
+        let max = 0;
+        for (let i = 0; i < service_providers.length; i++) {
 
-            if(service_providers[i].cost>max)max=service_providers[i].cost;
+          if (service_providers[i].cost > max) max = service_providers[i].cost;
 
-          }
+        }
 
 
         return {
@@ -323,15 +344,15 @@ app.post('/locservices', async (req, res, next) => {
 
   try {
 
-    const { pincode, ser_id, ser_pro, cost } = req.body;
+    const { pincode, ser_id, ser_pro, cost, time } = req.body;
 
     const is_locser = await locservice.findOne({ ser_id, location: pincode });
     if (is_locser == null) {
       const locser = await locservice.create({ ser_id, location: pincode });
-      const serpro = await serprocost.create({ ser_loc_id: locser._id, ser_pro, cost });
+      const serpro = await serprocost.create({ ser_loc_id: locser._id, ser_pro, cost, time });
     }
     else {
-      const serpro = await serprocost.create({ ser_loc_id: is_locser._id, ser_pro, cost });
+      const serpro = await serprocost.create({ ser_loc_id: is_locser._id, ser_pro, cost, time });
 
     }
 
@@ -345,23 +366,37 @@ app.post('/locservices', async (req, res, next) => {
 
 })
 
-
+//work in progress
 app.post('/services', async (req, res, next) => {
 
 
   try {
 
-    const { ser_name, category } = req.body;
-    const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
-      folder: 'services',
-      public_id: ser_name,
-    });
+    if (req.files.length > 1) {
 
-    fs.unlinkSync(req.files[0].path);
 
-    const response = await services.create({ category, img: imgresult.secure_url, name: ser_name });
+      const workbook = xlsx.readFile(req.files[0].path, { cellDates: true });
 
-    res.json(response);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const data = xlsx.utils.sheet_to_json(worksheet);
+      fs.unlinkSync(req.files[0].path);
+
+      console.log(data);
+    }
+    else {
+      const { ser_name, category } = req.body;
+      const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
+        folder: 'services',
+        public_id: ser_name,
+      });
+
+      fs.unlinkSync(req.files[0].path);
+
+      const response = await services.create({ category, img: imgresult.secure_url, name: ser_name });
+
+      res.json(response);
+    }
 
   }
   catch (err) {
@@ -561,10 +596,10 @@ app.post('/register', async (req, res, next) => {
     else {
       const hashpassword = await bcrypt.hash(password, 10);
 
-      const result = await User.create({ name, email, password: hashpassword, role, mobile,img:'' })
+      const result = await User.create({ name, email, password: hashpassword, role, mobile, img: '' })
 
       if (role == 'supplier') {
-        await serviceProviders.create({ user_id: result._id, status: false, rating: 0, proffision: '', location: 0 ,verified:false})
+        await serviceProviders.create({ user_id: result._id, status: false, rating: 0, proffision: '', location: 0, verified: false })
       }
       else if (role == 'agent') {
         await agents.create({ user_id: result._id, verified: false, location: 0 })
@@ -608,28 +643,39 @@ app.post('/send-otp', async (req, res, next) => {
         const newOtp = await Otp.create({ email, otp: hashedOtp });
       }
 
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'skilllinkforget@gmail.com',
-          pass: process.env.EMAILPASSWORD
-        }
-      });
-      const mailOptions = {
-        from: 'skilllinkforget@gmail.com',
-        to: email,
-        subject: 'Account Verification',
-        text: 'Your account Verification OTP\n' + otp
+
+      const url = 'https://api.sendinblue.com/v3/smtp/email'; // Brevo's email sending endpoint
+      const apiKey = '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'; // Replace with your actual API key
+
+      const emailData = {
+        sender: {
+          name: 'skill link',
+          email: 'skilllinkforget@gmail.com', // Your verified sender email
+        },
+        to: [
+          {
+            email: email, // Recipient's email address
+            name: 'our customer', // Optional
+          },
+        ],
+        subject: 'OTP FROM Skill Link',
+        htmlContent: `<html>
+                    <body>
+                      <h1>Hello,</h1>
+                      <p>Your OTP code is: <strong>${otp}</strong></p>
+                      <p>Thank you!</p>
+                    </body>
+                  </html>`, // HTML content
       };
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
+      const response = await axios.post(url, emailData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': apiKey, // Use the API key for authentication
+        },
       });
 
-      res.status(200).json({ error: false });
+      res.status(200).json('email sent')
+
     }
   } catch (error) {
     next(error);

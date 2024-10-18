@@ -9,7 +9,7 @@ ser_id:{
 },
 location:Number
 
-});
+}); 
 
 locserviceSchema.pre('remove',async (next)=>{
 

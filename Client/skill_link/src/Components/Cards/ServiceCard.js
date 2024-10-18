@@ -1,9 +1,11 @@
-import  React,{useState} from 'react';
-import { Card, Typography, Grid, Row, Col, Avatar, Modal } from 'antd';
+import  React,{useContext, useState} from 'react';
+import { Card, Typography, Grid, Row, Col, Avatar, Modal, Spin } from 'antd';
 import { MdPeopleAlt } from "react-icons/md";
 import { FaRupeeSign } from "react-icons/fa";
 import './card.css';
 import ServiceProvider from './ServiceProvider';
+import userContext from '../Login/UserContext';
+import axios from 'axios';
 
 const { Title, Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -11,44 +13,35 @@ const { useBreakpoint } = Grid;
 
 const ServiceCard = props => {
 
-    const data=[
-        {
-            name:'sadik',
-            profession:'mechanic',
-            rate:3.5,
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-             price:200,
-        },
-        {
-            name:'sadik',
-            profession:'mechanic',
-            rate:2.5,
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-             price:200,
-        },
-        {
-            name:'sadik',
-            profession:'mechanic',
-            rate:1.5,
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-             price:200,
-        },{
-            name:'sadik',
-            profession:'mechanic',
-            rate:5,
-            imgurl: "https://res.cloudinary.com/urbanclap/image/upload/t_high_res_template/w_233,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/luminosity/1656047929083-beff0d.jpeg",
-             price:200,
-        },
-    ]
-
+  
+    const {loading,setLoading,success,error}=useContext(userContext);
 
     const screens = useBreakpoint();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const showModal = () => {
+    const [ser_pro_data,setSerProData]=useState([]);
+    const showModal = async () => {
         setIsModalOpen(true);
-      };
-      const handleCancel = () => {
+       setLoading(true);
+        try{
+
+    const data=await Promise.all(
+        props.data.service_providers.map(async (each)=>{
+           const {cost,time}=each;
+          const result=await axios.get('/serviceproviders?ser_id='+each.ser_pro);
+          return {cost,time,...result.data};
+
+        })
+    )        
+           setSerProData([...data]);
+      }catch(err)
+      {
+         error("something went wrong");
+      }
+      setLoading(false);
+
+    }
+      
+const handleCancel = () => {
         setIsModalOpen(false);
       };
 
@@ -88,14 +81,15 @@ const ServiceCard = props => {
             }
         </div>
         <Modal title="Select Your Service Provider" open={isModalOpen}  onCancel={handleCancel} footer={null}>
-           { 
+        <Spin tip="Loading...." size='large' spinning={loading}>
+        { 
             
-            data.map((each)=>(
+            ser_pro_data.map((each)=>(
             <ServiceProvider data={each}/>
            
         ))
            }
-
+     </Spin>
       </Modal>
         </>
     );
