@@ -124,9 +124,21 @@ setLoading(false);
           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:5}}>
           <FaSearch onClick={handleSearchVisible} className="fs-2 mt-2"/>
           </Col>
+         
+          <>
+          {
+          user && user.role=='customer'?
           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:0}}>
-          <Link to='/cart' className="Link"><FaCartShopping className="fs-2 mt-2" /></Link>
+         <Link to='/cart' className="Link" ><FaCartShopping className="fs-2 mt-2" /></Link>
            </Col>
+           :
+           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:0}}>
+          <FaCartShopping className="fs-2 mt-2" onClick={handleLogin} />
+             </Col>
+          }
+           </>
+          
+
           <Col className="d-block d-sm-none mt-1" xs={{span:2,offset:0}}>
           <MdOutlineMenu className="fs-2 mt-2" onClick={showDrawer}/>
            </Col>
@@ -145,10 +157,10 @@ setLoading(false);
           <Col className="mt-2 d-flex  p-0" lg={3} onClick={handleLocation} style={{cursor:'pointer'}}>
 
             <IoLocation className="original-search-bar-nav" fontSize="30px" color="red" />
-            <p className="mt-2 original-search-bar-nav me-2 d-flex">
+            <div className="mt-2 original-search-bar-nav me-2 d-flex">
               <p className="original-search-bar-nav">{currLocation.name}</p>
             <IoIosArrowDown className="original-search-bar-nav" fontSize="20px"/>
-            </p>
+            </div>
 
           </Col>
 
@@ -164,7 +176,13 @@ setLoading(false);
                    :<><li className="mt-1"><FaUser/>{" "+user.name.slice(0,5)}</li>
                     <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
               }
-              <li className="fs-4"><Link to='/cart' className="Link"><FaCartShopping /></Link></li>
+              <li className="fs-4">
+                {user && user.role=='customer'?
+                <Link to='/cart' className="Link"><FaCartShopping /></Link>
+                :<FaCartShopping onClick={handleLogin} />
+
+                }
+                </li>
             </ul>
 
           </Col>

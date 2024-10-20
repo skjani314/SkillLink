@@ -76,7 +76,7 @@ app.post('/test', async (req, res, next) => {
 
 
 
-app.post('address', async (req, res, next) => {
+app.post('/address', async (req, res, next) => {
 
 
   try {
@@ -96,13 +96,14 @@ app.post('address', async (req, res, next) => {
 })
 
 
-app.get('address', async (req, res, next) => {
+app.get('/address', async (req, res, next) => {
 
   try {
 
-    const { customer_id } = req.body;
-
-    const result = await address.find(customer_id);
+    const { customer_id } = req.query;
+    console.log(customer_id)
+    const result = await address.find({ customer_id });
+    console.log(result)
     res.json(result);
   }
   catch (err) {
@@ -164,13 +165,17 @@ app.post('/orders', async (req, res, next) => {
 
   try {
 
-    const { customer_id, ser_pro_cost, address } = req.body;
+    const { customer_id, ser_pro_cost } = req.body;
 
+    const data = await orders.findOne({ customer_id, ser_pro_cost, status: 'cart' });
+    if (!data) {
 
-    const result = await orders.create({ customer_id, ser_pro_cost, address, status: 'cart' });
-    res.json(result);
-
-
+      const result = await orders.create({ customer_id, ser_pro_cost, status: 'cart' });
+      res.json(result);
+    }
+    else {
+      next(new Error('service Already in cart'))
+    }
   }
   catch (err) {
     next(err)
@@ -186,21 +191,72 @@ app.get('/orders', async (req, res, next) => {
 
   try {
 
-    const { ser_pro_cost, customer_id, status } = req.body;
+    const { ser_pro_cost, customer_id, status } = req.query;
 
     if (ser_pro_cost != null) {
       const result = await orders.find({ ser_pro_cost, status: { $ne: 'cart' } });
-      res.json(result);
+      const data = await Promise.all(
+
+        result.map(async (each) => {
+
+          const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
+          const { location, ser_id } = await locservice.findById(ser_loc_id);
+          const ser_data = await services.findById(ser_id);
+          const { user_id, proffision, rating } = await serviceProviders.findById(ser_pro);
+          const { name } = await User.findById(user_id);
+
+          return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name }
+
+
+        })
+      )
+
+      res.json(data);
     }
     else if (customer_id != null && status == 'cart') {
 
       const result = await orders.find({ customer_id, status: 'cart' });
-      res.json(result);
+
+      let x = 0;
+
+      const data = await Promise.all(
+
+        result.map(async (each) => {
+
+          const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
+          const { location, ser_id } = await locservice.findById(ser_loc_id);
+          const ser_data = await services.findById(ser_id);
+          const { user_id, proffision, rating } = await serviceProviders.findById(ser_pro);
+          const { name } = await User.findById(user_id);
+          x = x + cost;
+          return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name, id: each._id }
+
+
+        })
+      )
+
+      res.json({ data, x });
 
     }
     else if (customer_id != null) {
       const result = await orders.find({ customer_id, status: { $ne: 'cart' } });
-      res.json(result);
+      const data = await Promise.all(
+
+        result.map(async (each) => {
+
+          const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
+          const { location, ser_id } = await locservice.findById(ser_loc_id);
+          const ser_data = await services.findById(ser_id);
+          const { user_id, proffision, rating } = await serviceProviders.findById(ser_pro);
+          const { name } = await User.findById(user_id);
+
+          return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name }
+
+
+        })
+      )
+
+      res.json(data);
 
     }
     else {
@@ -221,12 +277,54 @@ app.put('/orders', async (req, res, next) => {
 
   try {
 
-    const { order_id, status } = req.body;
+    const { order_id, status, address } = req.query;
 
-    const result = await orders.findByIdAndUpdate({ _id: order_id }, { status }, { new: true })
+    if (status != null && address != null) {
+      const result = await orders.findByIdAndUpdate({ _id: order_id }, { status, address }, { new: true })
+      res.json(result);
+    }
+    else if (address != null) {
+      const result = await orders.findByIdAndUpdate({ _id: order_id }, { address }, { new: true })
+      res.json(result);
+    }
+    else if (status != null) {
+      const result = await orders.findByIdAndUpdate({ _id: order_id }, { status }, { new: true })
+      res.json(result);
+    }
+    else {
+      res.sendStatus(500).json('nothing to update');
+    }
 
-    res.json(result);
+  }
+  catch (err) {
+    next(err);
+  }
 
+
+
+})
+
+
+app.delete('/orders', async (req, res, next) => {
+
+
+  try {
+
+    const { id } = req.query;
+
+    const data = await orders.findById(id);
+    if (data.status == 'cart') {
+
+
+      const result = await orders.deleteOne({ _id: id });
+
+      res.json(result);
+
+
+    }
+    else {
+      next(new Error('unable to delete'))
+    }
   }
   catch (err) {
     next(err);
@@ -553,7 +651,7 @@ app.post('/forget', async (req, res, next) => {
         htmlContent: `<html>
                     <body>
                       <h1>Hello,</h1>
-                      <p>Your Reset link is:<br></br> <strong>${'https://3000-skjani314-skilllink-76payofl55d.ws-us116.gitpod.io/forgot/'+token}</strong></p>
+                      <p>Your Reset link is:<br></br> <strong>${'https://3000-skjani314-skilllink-76payofl55d.ws-us116.gitpod.io/forgot/' + token}</strong></p>
                       <p>Thank you!</p>
                     </body>
                   </html>`, // HTML content
@@ -782,7 +880,7 @@ app.post('/login', async (req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  return res.status(500).json({ error: true });
+  return res.status(500).json({ error: true, message: err.message });
 });
 
 

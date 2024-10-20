@@ -26,9 +26,10 @@ const ServiceCard = props => {
 
     const data=await Promise.all(
         props.data.service_providers.map(async (each)=>{
-           const {cost,time}=each;
+           const {cost,time,_id}=each;
+           console.log(each)
           const result=await axios.get('/serviceproviders?ser_id='+each.ser_pro);
-          return {cost,time,...result.data};
+          return {cost,time,_id,...result.data};
 
         })
     )        
@@ -85,7 +86,7 @@ const handleCancel = () => {
         { 
             
             ser_pro_data.map((each)=>(
-            <ServiceProvider data={each}/>
+            <ServiceProvider data={each} key={each._id} handleCancel={handleCancel}/>
            
         ))
            }

@@ -1,12 +1,15 @@
 import { Avatar, Row,Col, Pagination,Grid } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import ServiceCard from '../Cards/ServiceCard';
 import './SearchResult.css';
+import userContext from '../Login/UserContext';
 
 
 const {useBreakpoint}=Grid;
 
 const SearchResult = props => {
+
+const {servicesData}=useContext(userContext);
 
 const screens=useBreakpoint();
 
@@ -196,7 +199,7 @@ const screens=useBreakpoint();
                     <Row>
               
                     {
-                       data.map((each)=>(
+                       servicesData.map((each)=>(
                         screens.md?
                         <Col md={{span:8}} >
                         <ServiceCard data={each} />

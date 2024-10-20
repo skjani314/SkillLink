@@ -1,0 +1,18 @@
+
+.dashboard-container{
+
+    background-color: whitesmoke;
+    padding-bottom: 30%;
+
+}
+@media screen and (min-width:768px){
+    .dashboard-container{
+        display: block;
+        min-height:80vh;
+        background-color: white;
+        padding: 10px;
+        padding-left: 0px;
+        background-color: whitesmoke;
+
+    }
+}

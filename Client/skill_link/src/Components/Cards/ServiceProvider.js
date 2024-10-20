@@ -1,13 +1,53 @@
 import { Avatar, Button, Card, Flex,Rate,Typography } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaClock, FaRupeeSign,FaUser } from 'react-icons/fa';
 import './card.css';
 import { MdOutlineWork } from 'react-icons/md';
-
+import userContext from '../Login/UserContext.js';
+import axios from 'axios';
 
 const ServiceProvider = props => {
 
     const {Title,Text}=Typography;
+   const {error,loading,setLoading,success,user, setUser}=useContext(userContext);
+
+const handleAddCartClick=async ()=>{
+
+setLoading(true);
+try{
+
+if(user==null || user.role!='customer')
+{
+props.handleCancel();
+error('Log in as Customer First Before Ordering');
+}
+else
+{
+    const form_data=new FormData();
+    form_data.append('customer_id',user._id);
+    form_data.append('ser_pro_cost',props.data._id);
+
+    const result=await axios.post('/orders',form_data);
+    console.log(result);
+    success("Service Added to cart succesfully");
+    setUser(prev=>({...prev}));
+    props.handleCancel();
+}
+
+}
+catch(err)
+{
+    error(err.response.data.message);
+    console.log(err);
+}
+
+setLoading(false);
+
+}
+
+
+
+
 
     return (
         <div>
@@ -24,7 +64,7 @@ const ServiceProvider = props => {
                    <Text ><MdOutlineWork/> {props.data.proffision}</Text>
                    <Text ><FaRupeeSign className='mb-1'/> {props.data.cost}</Text>
                    <Text ><FaClock className='mb-1'/> {props.data.time+" minuetes"}</Text>
-                   <Button className='bg-warning sr-card' block>Add to Cart</Button>
+                   <Button className='bg-warning sr-card' block onClick={handleAddCartClick}>Add to Cart</Button>
                   </Flex>
                 </Flex>
             </Card>
