@@ -5,6 +5,7 @@ import './login.css';
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import userContext from './UserContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function SigninReg(props) {
 const [FormFlag,setFormFlag]=useState('reg');
@@ -20,7 +21,7 @@ const [spc,setSpc]=useState(false);
 const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
 const [forgetpass,setForgetPass]=useState({email:'',flag:false});
 const {otpform,setOtpform}=props;
-
+const navigate=useNavigate();
 
 
 
@@ -202,9 +203,19 @@ try{
         
         const result= await axios.post('/get-user');
         setUser(result.data);
+
         props.handleModalCancel();
         setLoading(false);
         setOtpform(false);
+        if(result.data.role=='supplier'){
+          navigate('/serviceproviders/'+result.data._id+'/dashboard');
+        }
+        else if(result.data.role=='agent'){
+          navigate('/agents/'+result.data._id+'/dashboard');
+        }
+        else if(result.data.role=='admin'){
+          navigate('/admins/'+result.data._id+'/dashboard');
+        }
         success("Logged In successfully");
 
        }catch(err)

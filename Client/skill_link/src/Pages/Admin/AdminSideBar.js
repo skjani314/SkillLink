@@ -1,13 +1,11 @@
 import { MdDashboard } from "react-icons/md";
 import { BsTools } from "react-icons/bs";
-import { GrTransaction } from "react-icons/gr";
+import { FaPeopleGroup } from "react-icons/fa6";
 import { CgProfile } from "react-icons/cg";
 
-import './Sidebar.css'
 import { useContext } from "react";
-import userContext from "../Login/UserContext";
 import { Link } from "react-router-dom";
-
+import userContext from "../../Components/Login/UserContext";
 const sidebarItems=[
     {
         id:"DASHBOARD",
@@ -19,14 +17,14 @@ const sidebarItems=[
         id:'SERVICES',
         displayText:'Services',
         icon:<BsTools className="mb-2"/>,
-        path:'/myservices'
+        path:'/services'
     },
     
     {
-        id:"TRANSACTIONS",
-        displayText:'Transactions',
-        icon:<GrTransaction className="mb-2"/>,
-        path:'/transactions'
+        id:"MYAGENTS",
+        displayText:'My Agents',
+        icon:<FaPeopleGroup className="mb-2"/>,
+        path:'/myagents'
     },
     {
         id:"PROFILE",
@@ -38,7 +36,7 @@ const sidebarItems=[
 ]
 
 
-const Sidebar=()=>{
+const AdminSideBar=()=>{
 
 
 const {activeTab,changeActiveTab,user}=useContext(userContext);    
@@ -55,7 +53,7 @@ const {activeTab,changeActiveTab,user}=useContext(userContext);
                 <ul className="unordered-list">
                     {sidebarItems.map((eachItem)=>(
                         <li key={eachItem.id}>
-                         <Link to={'/serviceproviders/'+user._id+eachItem.path} className="Link" >  <div className={`sidebar-icon-container ${eachItem.id===activeTab?'active-tab-color':''}`} onClick={()=>{changeActiveTab(eachItem.id)}} >
+                         <Link to={'/admins/'+user._id+eachItem.path} className="Link" >  <div className={`sidebar-icon-container ${eachItem.id===activeTab?'active-tab-color':''}`} onClick={()=>{changeActiveTab(eachItem.id)}} >
                                 {eachItem.icon}
                                 <p className="mt-3">{eachItem.displayText}</p>   
                             </div></Link>
@@ -66,7 +64,7 @@ const {activeTab,changeActiveTab,user}=useContext(userContext);
                 <ul className='sidebar-container-mobile' style={{zIndex:100}}>
                 {sidebarItems.map((eachItem)=>(
                         <li key={eachItem.id}>
-                         <Link to={'/serviceproviders/'+user._id+eachItem.path} className="Link" >   <div  className={`icon-container-mobile ${eachItem.id===activeTab?'active-tab-color':''}`} onClick={()=>{changeActiveTab(eachItem.id)}}>
+                         <Link to={'/admins/'+user._id+eachItem.path} className="Link" >   <div  className={`icon-container-mobile ${eachItem.id===activeTab?'active-tab-color':''}`} onClick={()=>{changeActiveTab(eachItem.id)}}>
                                  {eachItem.icon}
                                  </div></Link>
                         </li>
@@ -79,4 +77,4 @@ const {activeTab,changeActiveTab,user}=useContext(userContext);
     
    
 }
-export default Sidebar
+export default AdminSideBar;

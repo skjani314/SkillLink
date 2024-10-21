@@ -30,7 +30,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: 'https://3000-skjani314-skilllink-76payofl55d.ws-us116.gitpod.io/',
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))

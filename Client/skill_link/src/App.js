@@ -11,8 +11,18 @@ import {message} from 'antd';
 import Forgotpass from './Components/Login/Forgotpass';
 import ServicePage from './Pages/Service/ServicePage';
 import Cart from './Pages/Cart/Cart';
-import ServiceProvider from './Pages/ServiceProvider/ServiceProvider';
-
+import SerDashboard from './Pages/ServiceProvider/SerDashboard';
+import SerMyServices from './Pages/ServiceProvider/SerMyServices';
+import SerTransactions from './Pages/ServiceProvider/SerTransactions';
+import SerProfile from './Pages/ServiceProvider/SerProfile';
+import AgeDashboard from './Pages/Agent/AgeDashboard';
+import AgeService from './Pages/Agent/AgeService';
+import AgeSuppliers from './Pages/Agent/AgeSuppliers';
+import AgeProfile from './Pages/Agent/AgeProfile';
+import AdminDashboard from './Pages/Admin/AdminDashboard.js';
+import AdminServices from './Pages/Admin/AdminServices.js'
+import AdminMyAgents from './Pages/Admin/AdminMyAgents.js';
+import AdminProfile from './Pages/Admin/AdminProfile.js';
 
 function App() {
 
@@ -172,7 +182,6 @@ setTotalCost(x);
 },[user]);  
 
   return (
-  <>
   <userContext.Provider value={data}>
 
   <BrowserRouter>
@@ -181,16 +190,24 @@ setTotalCost(x);
        <Route path='/forgot/:token'element={<Forgotpass/>} />
        <Route path='/services' element={<ServicePage/>}  />
        <Route path='/cart' element={<Cart/>}/>
-       {user && user.role=='supplier'?<>
-       <Route path='/serviceproviders/' element={<ServiceProvider/>}/>
+       <Route path='/serviceproviders/:id/dashboard' element={user && user.role==='supplier'?<SerDashboard/>:null}/>
+       <Route path='/serviceproviders/:id/myservices' element={user && user.role==='supplier'?<SerMyServices/>:null}/>
+       <Route path='/serviceproviders/:id/transactions' element={user && user.role==='supplier'?<SerTransactions/>:null}/>
+       <Route path='/serviceproviders/:id/profile' element={user && user.role==='supplier'?<SerProfile/>:null}/>
+       <Route path='/agents/:id/dashboard' element={user && user.role==='agent'?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/services' element={user && user.role==='agent'?<AgeService/>:null}/>
+       <Route path='/agents/:id/mysuppliers' element={user && user.role==='agent'?<AgeSuppliers/>:null}/>
+       <Route path='/agents/:id/profile' element={user && user.role==='agent'?<AgeProfile/>:null}/>
+       <Route path='/admins/:id/dashboard' element={user && user.role==='admin'?<AdminDashboard/>:null}/>
+       <Route path='/admins/:id/services' element={user && user.role==='admin'?<AdminServices/>:null}/>
+       <Route path='/admins/:id/myagents' element={user && user.role==='admin'?<AdminMyAgents/>:null}/>
+       <Route path='/admins/:id/profile' element={user && user.role==='admin'?<AdminProfile/>:null}/>
 
-       </>
-       :null
-      }
+
     </Routes>
   </BrowserRouter>
   </userContext.Provider>
-  </>
+  
   );
 }
 
