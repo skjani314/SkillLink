@@ -1,18 +1,29 @@
 import React from 'react'
 import userContext from '../../Components/Login/UserContext';
-import { useContext,useState } from 'react';
+import { useContext,useState,useEffect } from 'react';
 import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import Dashboard from '../../Components/Dashboard/Dashboard';
 import './ServiceProvider.css'
-
+import { useParams } from 'react-router-dom';
 
 
 const SerDashboard = props => {
 
 
-const {contextHolder,error,user,setUser,success,loading,activeTab}=useContext(userContext);
+const {contextHolder,error,user,setUser,success,loading,activeTab,changeActiveTab}=useContext(userContext);
+const {id}=useParams();
+
+useEffect(()=>{
+
+
+    changeActiveTab('DASHBOARD')
+
+},[])
+if(id!=user._id){
+return null;
+}
 
 
 

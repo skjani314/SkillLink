@@ -1,17 +1,27 @@
 import React from 'react'
 import userContext from '../../Components/Login/UserContext';
-import { useContext,useState } from 'react';
+import { useContext,useState,useEffect } from 'react';
 import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import './ServiceProvider.css'
 import Myservices from '../../Components/myservices/Myservices';
-
+import { useParams } from 'react-router-dom';
 const SerMyServices = props => {
 
 
-const {contextHolder,error,user,setUser,success,loading,activeTab}=useContext(userContext);
+const {contextHolder,error,user,setUser,success,loading,activeTab,changeActiveTab}=useContext(userContext);
 
+const {id}=useParams();
+
+useEffect(()=>{
+
+    changeActiveTab('SERVICES')
+
+},[])
+if(id!=user._id){
+return null;
+}
 
 
     return (

@@ -4,7 +4,7 @@ import { IoLocation } from "react-icons/io5";
 import { Button, Col, Input, Row,Drawer,Modal, Card, Skeleton } from 'antd';
 import { MdHomeRepairService } from "react-icons/md";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { FaSearch } from "react-icons/fa";
+import { FaLaptopHouse, FaSearch } from "react-icons/fa";
 import './Nav.css';
 import { MdOutlineMenu } from "react-icons/md";
 import { FaUser,FaUserPlus,FaClipboardList } from "react-icons/fa";
@@ -119,7 +119,7 @@ setLoading(false);
       <nav className="container-fluid  pt-2">
         <Row>
           <Col lg={3} md={3} sm={4} xs={10}>
-            <Link to='/'><img src={logo} className="img-fluid" /></Link>
+            <Link to='/' className="Link"><img src={logo} className="img-fluid" /></Link>
           </Col>
           <Col className="d-block d-sm-none mt-1" xs={{span:3,offset:5}}>
           <FaSearch onClick={handleSearchVisible} className="fs-2 mt-2"/>
@@ -168,12 +168,19 @@ setLoading(false);
 
             <ul type="none" className="d-flex justify-content-around">
               <li  className="mt-1" ><Link to='/' className="Link"><AiFillHome className="mb-1 " /> Home</Link></li>
-              <li className="mt-1" ><Link to='/services' className="Link" ><MdHomeRepairService className="mb-1 " /> Services</Link></li>
-              <li className="mt-1" ><Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</Link></li>
+              <li className="mt-1" ><Link to='/services' className="Link" ><MdHomeRepairService className="mb-0 " /> Services</Link></li>
+              <li className="mt-1" >
+                {user && user.role=='customer'?
+                <Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</Link>
+                :
+                <Link to={user && user.role=='supplier'?'/serviceproviders/'+user._id+'/dashboard':user && user.role=='agent'?'/agents/'+user._id+'/dashboard':user?'/admins/'+user._id+'/dashboard':null} className="Link"><FaLaptopHouse style={{fontSize:20}} className="mb-1 " /> Staff</Link>
+
+                }
+                </li>
               <li className="mt-1 search-bar-nav" onClick={handleSearchVisible} ><FaSearch className="mb-1 fs-5" /> </li>
              {
               (!user)?<li className="mt-1"><Button type="primary" size="small" onClick={handleLogin}><FaUser/> Log In</Button></li>
-                   :<><li className="mt-1"><FaUser/>{" "+user.name.slice(0,5)}</li>
+                   :<><li className="mt-1"><FaUser className="mb-1"/>{" "+user.name.slice(0,5)}</li>
                     <li className="mt-1"><Button type="primary" size="small" onClick={handleLogout}>Log Out</Button></li></>
               }
               <li className="fs-4">
@@ -235,7 +242,13 @@ setLoading(false);
               <hr></hr>
               <li className="my-1" ><Link to='' className="Link"><FaClipboardList className="mb-1 " /> My Orders</Link></li>
               <hr></hr>
-              <li className="my-1" ><Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact us</Link></li>
+              <li className="my-1" >
+                {user && user.role=='customer'?
+                <Link to='/contactus' className="Link"><IoChatbubbleEllipsesSharp className="mb-1 " /> Contact Us</Link>
+                :<Link to={user && user.role=='supplier'?'/serviceproviders/'+user._id+'/dashboard':user && user.role=='agent'?'/agents/'+user._id+'/dashboard': user?'/admins/'+user._id+'/dashboard':null} className="Link"><FaLaptopHouse style={{fontSize:20}} className="mb-1 " /> Staff</Link>
+
+                }   
+                </li>
                            <hr></hr>
 
             </ul>

@@ -18,11 +18,13 @@ import fs from 'fs';
 import agents from './models/agents.js';
 import orders from './models/orders.js';
 import address from './models/address.js';
-import smtpTransport from 'nodemailer-smtp-transport';
 import axios from 'axios';
+import http from 'http';
 
 dotenv.config();
 const app = express();
+
+
 const upload_file = multer({ dest: 'uploads/' });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
@@ -34,6 +36,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }))
+
+
+
+
+
 
 mongoose.connect('mongodb+srv://skilllinkforget:' + process.env.PASSWORD + '@skilllink.z4fk4.mongodb.net/SkillLink', {
   useNewUrlParser: true,
@@ -186,32 +193,57 @@ app.post('/orders', async (req, res, next) => {
 });
 
 
-app.get('/orders', async (req, res, next) => {
+app.get('/orders', async (req, res, next) => {  
 
 
   try {
 
-    const { ser_pro_cost, customer_id, status } = req.query;
+    const { user_id, customer_id, status } = req.query;
 
-    if (ser_pro_cost != null) {
-      const result = await orders.find({ ser_pro_cost, status: { $ne: 'cart' } });
-      const data = await Promise.all(
+    if (user_id != null) {
+      const ser_pro_data=await serviceProviders.findOne({user_id})
+      const result = await serprocost.find({ser_pro:ser_pro_data._id});
+      const ser_req_data = await Promise.all(
 
         result.map(async (each) => {
 
-          const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
-          const { location, ser_id } = await locservice.findById(ser_loc_id);
-          const ser_data = await services.findById(ser_id);
-          const { user_id, proffision, rating } = await serviceProviders.findById(ser_pro);
-          const { name } = await User.findById(user_id);
+          const requests = !status?await orders.find({ser_pro_cost:each._id,status:'Request'}):await orders.find({ser_pro_cost:each._id,status:{$nin:['Cart','Request']}});
+         const {ser_id}=await locservice.findById(each.ser_loc_id);
+        const {name}=await services.findById(ser_id); 
+        
+    return {requests,cost:each.cost,ser_name:name};
 
-          return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name }
+        })
+      )
+       
+      const data=await Promise.all(
+        ser_req_data.map(async( each)=>{
+           const {cost,ser_name,requests}=each;
 
+            const req_data=await Promise.all(requests.map(async (each)=>{
+                 const {date,customer_id,_id,status} =each;
+                 const {name,mobile}=await User.findById(customer_id);
+                 const add_data=await address.findById(each.address);
+                 return {name,mobile,cost,ser_name,date,address,order_id:_id,address:add_data.address,status}
+                
+            }))
+            return req_data;
 
         })
       )
 
-      res.json(data);
+
+let final_data=[];
+data.map(each=>{
+
+each.map(eachItem=>{
+  final_data.push(eachItem);
+})
+
+})
+
+
+      res.json(final_data);
     }
     else if (customer_id != null && status == 'cart') {
 
@@ -280,7 +312,8 @@ app.put('/orders', async (req, res, next) => {
     const { order_id, status, address } = req.query;
 
     if (status != null && address != null) {
-      const result = await orders.findByIdAndUpdate({ _id: order_id }, { status, address }, { new: true })
+      const result = await orders.findByIdAndUpdate({ _id: order_id }, { status, address,date:Date.now() }, { new: true })
+      
       res.json(result);
     }
     else if (address != null) {
@@ -551,6 +584,27 @@ app.delete('/services', async (req, res, next) => {
 
 })
 
+
+app.get('/ser_myservices',async (req,res)=>{
+
+
+const {user_id}=req.query;
+const {_id}=await serviceProviders.findOne({user_id:user_id});
+
+const ser_pro=await serprocost.find({ser_pro:_id});
+const data=await Promise.all(
+ser_pro.map(async (each)=>{
+const {ser_loc_id,time,cost}=each;
+const {ser_id,location}=await locservice.findById(ser_loc_id);
+const {img,name}=await services.findById(ser_id);
+return {cost,time,img,name,location}
+})
+
+)
+res.json(data);
+
+
+})
 
 
 app.post('/passchange', async (req, res, next) => {

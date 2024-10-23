@@ -4,13 +4,16 @@ import { useContext } from 'react';
 import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import AdminSideBar from './AdminSideBar';
-
+import { useParams } from 'react-router-dom';
 
 const AdminProfile = props => {
 
 
     const { contextHolder, error, user, setUser, success, loading, activeTab } = useContext(userContext);
-
+    const {id}=useParams();
+    if(id!=user._id){
+    return null;
+    }
 
 
     return (

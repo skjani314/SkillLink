@@ -8,7 +8,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import './TopBar.css';
 import TopBarDup from './TopBarDup';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const {Text}=Typography;
 
@@ -44,7 +44,7 @@ const handleLogout=async ()=>{
             <div className='header-main-container' style={{ zIndex: 1000 }}>
                 <div className='header-container'  >
                     <div>
-                        <img src={logo} className="styling-logo" alt="logo" />
+                    <Link to='/'>  <img src={logo} className="styling-logo" alt="logo" /></Link> 
                     </div>
                     <div className="logout-container">
                        

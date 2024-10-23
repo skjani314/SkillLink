@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import AgentSideBar from './AgentSideBar';
-
+import { useParams } from 'react-router-dom';
 
 
 const AgeDashboard = props => {
@@ -12,7 +12,10 @@ const AgeDashboard = props => {
 
     const { contextHolder, error, user, setUser, success, loading, activeTab } = useContext(userContext);
 
-
+    const {id}=useParams();
+    if(id!=user._id){
+    return null;
+    }
 
     return (
         <>

@@ -61,7 +61,7 @@ const Cart = props => {
                 orders.map(async (each) => {
 
 
-                    const up_data = await axios.put('/orders?order_id=' + each.id + '&status=Request&address=' + address_id.address)
+                    const up_data = await axios.put('/orders?order_id=' + each.id + '&status=Request&address=' + address_id._id)
 
                     console.log(up_data.data);
 
