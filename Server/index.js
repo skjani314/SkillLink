@@ -19,7 +19,7 @@ import agents from './models/agents.js';
 import orders from './models/orders.js';
 import address from './models/address.js';
 import axios from 'axios';
-import http from 'http';
+import requests from './models/requests.js';
 
 dotenv.config();
 const app = express();
@@ -367,18 +367,21 @@ app.delete('/orders', async (req, res, next) => {
 
 })
 
-//details of service providers
 app.get('/serviceproviders', async (req, res, next) => {
 
   try {
 
-    const { ser_id } = req.query;
+    const { ser_id,id } = req.query;
 
+    if(ser_id){
     const { proffision, rating, user_id } = await serviceProviders.findOne({ _id: ser_id });
     const { name, img } = await User.findById(user_id);
 
     res.json({ proffision, rating, name, img })
-
+    }else{
+         const {proffision,rating,status,location,verified,verified_by}=await serviceProviders.findOne({user_id:id});
+         res.json({proffision,rating,status,location,verified,verified_by});
+    }
 
   }
   catch (err) {
@@ -391,6 +394,47 @@ app.get('/serviceproviders', async (req, res, next) => {
 
 })
 
+app.post('/requests',async (req,res,next)=>{
+
+
+try{
+
+const {req_from,proffision,location}=req.body;
+
+if(proffision)
+  {
+   const result= await serviceProviders.findOneAndUpdate({user_id:req_from},{proffision,location,status:true},{new:true});
+   console.log(result) 
+   const agent_data=await agents.findOne({location})
+    if(agent_data){
+    const result=await requests.create({req_to:agent_data._id,req_from,status:'Pending'});
+
+    res.json(result);
+    }else{
+      next(new Error('Location is Unavailable'))
+    }
+  }
+  else{
+    await agents.findByIdAndUpdate({_id:req_from},{location},{new:true});
+    const admin_data=await User.findOne({role:'admin'})
+    const result=await requests.create({req_to:admin_data._id,req_from,status:'Pending'});
+     
+    res.json(result);
+  }
+
+
+
+}
+catch(err)
+{
+  next(err)
+}
+
+
+
+
+
+})
 
 
 app.put('/locservices', async (req, res, next) => {
@@ -597,7 +641,7 @@ ser_pro.map(async (each)=>{
 const {ser_loc_id,time,cost}=each;
 const {ser_id,location}=await locservice.findById(ser_loc_id);
 const {img,name}=await services.findById(ser_id);
-return {cost,time,img,name,location}
+return {cost,time,img,name,location,id:each._id}
 })
 
 )
@@ -885,10 +929,10 @@ app.post('/get-user', async (req, res, next) => {
     }
     else {
 
-      const email = decode.email;
-      console.log(email);
-      const user = await User.findOne({ email })
-      res.json(user);
+      const de_email = decode.email;
+      console.log(de_email);
+      const {name,email,img,role,mobile,_id} = await User.findOne({ email:de_email })
+      res.json({name,email,img,role,mobile,_id});
     }
 
   })

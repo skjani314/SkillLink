@@ -6,9 +6,9 @@ import userContext from '../Login/UserContext';
 import axios from 'axios';
 const Myservices = () => {
 
-const {success,error,loading,setLoading,user}=useContext(userContext);
+const {success,error,user}=useContext(userContext);
 const [myservice,setmyservice]=useState([]);
-
+const [loading,setLoading]=useState(false);
 
 
 
@@ -19,7 +19,6 @@ const getMyservice=async ()=>{
 try{
 
 const result =await axios.get('/ser_myservices?user_id='+user._id);
-console.log(result.data);
 setmyservice([...result.data])
 
 }
@@ -36,7 +35,7 @@ catch(err)
 if(user){
 getMyservice();}
 
-},[])
+},[loading])
 
 
 
@@ -47,7 +46,7 @@ getMyservice();}
           <h1 className='p-1 m-2'>My Services</h1>
           <Flex wrap justify="center" gap={10} >
             {myservice.map((each,index)=>(
-              <MyServiceCard  key={index} data={each}/>
+              <MyServiceCard  key={index} setLoading={setLoading} loading={loading} data={each}/>
 
             ))
 }

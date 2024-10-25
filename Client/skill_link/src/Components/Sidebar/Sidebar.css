@@ -201,3 +201,13 @@
 .sidebar-container-mobile{
 
 }
+
+.disable-component {
+    pointer-events: none;
+    opacity: 0.6;          /* Optional for visual feedback */
+    cursor: not-allowed;   /* Show blocked cursor */
+  }
+
+.disable-component:hover{
+    cursor:not-allowed
+}  

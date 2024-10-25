@@ -92,7 +92,11 @@ const data={
       try{
 
            const result= await axios.post('/get-user');
-               setUser(result.data);
+               if(result.data.role=='supplier'){
+                const ser_pro_data=await axios.get('/serviceproviders?id='+result.data._id);
+                setUser({...result.data,...ser_pro_data.data})
+               }
+console.log(user);
                flag=true;
                return true;
         }
@@ -191,9 +195,9 @@ setTotalCost(x);
        <Route path='/services' element={<ServicePage/>}  />
        <Route path='/cart' element={<Cart/>}/>
        <Route path='/serviceproviders/:id/dashboard' element={user && user.role==='supplier'?<SerDashboard/>:null}/>
-       <Route path='/serviceproviders/:id/myservices' element={user && user.role==='supplier'?<SerMyServices/>:null}/>
-       <Route path='/serviceproviders/:id/transactions' element={user && user.role==='supplier'?<SerTransactions/>:null}/>
-       <Route path='/serviceproviders/:id/profile' element={user && user.role==='supplier'?<SerProfile/>:null}/>
+       <Route path='/serviceproviders/:id/myservices' element={user && user.role==='supplier' && user.verified?<SerMyServices/>:user && !user.verified?<SerDashboard/>:null}/>
+       <Route path='/serviceproviders/:id/transactions' element={user && user.verified && user.role==='supplier' && user.verified?<SerTransactions/>:user && !user.verified?<SerDashboard/>:null}/>
+       <Route path='/serviceproviders/:id/profile' element={user && user.role==='supplier' && user.verified?<SerProfile/>:user && !user.verified?<SerDashboard/>:null}/>
        <Route path='/agents/:id/dashboard' element={user && user.role==='agent'?<AgeDashboard/>:null}/>
        <Route path='/agents/:id/services' element={user && user.role==='agent'?<AgeService/>:null}/>
        <Route path='/agents/:id/mysuppliers' element={user && user.role==='agent'?<AgeSuppliers/>:null}/>

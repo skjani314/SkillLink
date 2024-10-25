@@ -16,13 +16,14 @@ import SigninReg from '../Login/Login.js';
 import userContext from "../Login/UserContext.js";
 import axios from "axios";
 import Locsuggest from "./Locsuggest.js";
-import {Link} from 'react-router-dom';
+import {Link,useNavigate} from 'react-router-dom';
+
 
 const { Search } = Input;
 
 function Nav() {
  
-
+const navigate=useNavigate();
 const [searchVisible,setsearchVisible]=useState('none');
 const [drawerVisible,setDrawervisible]=useState(false);
 const [isModalOpen,setModalOpen]=useState(false);
@@ -101,6 +102,7 @@ try{
    success("logged out successfully");
    setUser(null);
    setLoading(false);
+   navigate('/')
 
 }
 catch{
