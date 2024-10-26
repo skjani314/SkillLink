@@ -96,6 +96,11 @@ const data={
                 const ser_pro_data=await axios.get('/serviceproviders?id='+result.data._id);
                 setUser({...result.data,...ser_pro_data.data})
                }
+               else if(result.data.role=='agent'){
+                const agent_data=await axios.get('/agents?user_id='+result.data._id);
+                console.log(agent_data.data)
+                setUser({...result.data,...agent_data.data});
+               }
 console.log(user);
                flag=true;
                return true;
@@ -197,16 +202,15 @@ setTotalCost(x);
        <Route path='/serviceproviders/:id/dashboard' element={user && user.role==='supplier'?<SerDashboard/>:null}/>
        <Route path='/serviceproviders/:id/myservices' element={user && user.role==='supplier' && user.verified?<SerMyServices/>:user && !user.verified?<SerDashboard/>:null}/>
        <Route path='/serviceproviders/:id/transactions' element={user && user.verified && user.role==='supplier' && user.verified?<SerTransactions/>:user && !user.verified?<SerDashboard/>:null}/>
-       <Route path='/serviceproviders/:id/profile' element={user && user.role==='supplier' && user.verified?<SerProfile/>:user && !user.verified?<SerDashboard/>:null}/>
-       <Route path='/agents/:id/dashboard' element={user && user.role==='agent'?<AgeDashboard/>:null}/>
-       <Route path='/agents/:id/services' element={user && user.role==='agent'?<AgeService/>:null}/>
-       <Route path='/agents/:id/mysuppliers' element={user && user.role==='agent'?<AgeSuppliers/>:null}/>
-       <Route path='/agents/:id/profile' element={user && user.role==='agent'?<AgeProfile/>:null}/>
+       <Route path='/serviceproviders/:id/profile' element={user && user.role==='supplier' && user.verified?<SerProfile/>:user && !user.verified?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/dashboard' element={user && user.role==='agent' && user.verified?<AgeDashboard/>:user && !user.verified?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/services' element={user && user.role==='agent' && user.verified?<AgeService/>:user && !user.verified?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/mysuppliers' element={user && user.role==='agent' && user.verified?<AgeSuppliers/>:user && !user.verified?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/profile' element={user && user.role==='agent' && user.verified?<AgeProfile/>:user && !user.verified?<AgeDashboard/>:null}/>
        <Route path='/admins/:id/dashboard' element={user && user.role==='admin'?<AdminDashboard/>:null}/>
        <Route path='/admins/:id/services' element={user && user.role==='admin'?<AdminServices/>:null}/>
        <Route path='/admins/:id/myagents' element={user && user.role==='admin'?<AdminMyAgents/>:null}/>
        <Route path='/admins/:id/profile' element={user && user.role==='admin'?<AdminProfile/>:null}/>
-
 
     </Routes>
   </BrowserRouter>
