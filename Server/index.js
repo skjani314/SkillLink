@@ -55,7 +55,7 @@ cloudinary.config({
 });
 
 
-app.post('/test', async(req, res, next) => {
+app.post('/test', async (req, res, next) => {
 
     try {
 
@@ -82,7 +82,7 @@ app.post('/test', async(req, res, next) => {
 
 
 
-app.post('/address', async(req, res, next) => {
+app.post('/address', async (req, res, next) => {
 
 
     try {
@@ -101,7 +101,7 @@ app.post('/address', async(req, res, next) => {
 })
 
 
-app.get('/address', async(req, res, next) => {
+app.get('/address', async (req, res, next) => {
 
     try {
 
@@ -116,7 +116,7 @@ app.get('/address', async(req, res, next) => {
 
 })
 
-app.put('/address', async(req, res, next) => {
+app.put('/address', async (req, res, next) => {
 
     try {
 
@@ -132,7 +132,7 @@ app.put('/address', async(req, res, next) => {
 })
 
 
-app.delete('/order', async(req, res, next) => {
+app.delete('/order', async (req, res, next) => {
 
 
     try {
@@ -161,7 +161,7 @@ app.delete('/order', async(req, res, next) => {
 })
 
 
-app.post('/orders', async(req, res, next) => {
+app.post('/orders', async (req, res, next) => {
 
 
     try {
@@ -185,7 +185,7 @@ app.post('/orders', async(req, res, next) => {
 });
 
 
-app.get('/orders', async(req, res, next) => {
+app.get('/orders', async (req, res, next) => {
 
 
     try {
@@ -197,7 +197,7 @@ app.get('/orders', async(req, res, next) => {
             const result = await serprocost.find({ ser_pro: ser_pro_data._id });
             const ser_req_data = await Promise.all(
 
-                result.map(async(each) => {
+                result.map(async (each) => {
 
                     const requests = !status ? await orders.find({ ser_pro_cost: each._id, status: 'Request' }) : await orders.find({ ser_pro_cost: each._id, status: { $nin: ['Cart', 'Request'] } });
                     const { ser_id } = await locservice.findById(each.ser_loc_id);
@@ -209,10 +209,10 @@ app.get('/orders', async(req, res, next) => {
             )
 
             const data = await Promise.all(
-                ser_req_data.map(async(each) => {
+                ser_req_data.map(async (each) => {
                     const { cost, ser_name, requests } = each;
 
-                    const req_data = await Promise.all(requests.map(async(each) => {
+                    const req_data = await Promise.all(requests.map(async (each) => {
                         const { date, customer_id, _id, status } = each;
                         const { name, mobile } = await User.findById(customer_id);
                         const add_data = await address.findById(each.address);
@@ -244,7 +244,7 @@ app.get('/orders', async(req, res, next) => {
 
             const data = await Promise.all(
 
-                result.map(async(each) => {
+                result.map(async (each) => {
 
                     const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
                     const { location, ser_id } = await locservice.findById(ser_loc_id);
@@ -264,7 +264,7 @@ app.get('/orders', async(req, res, next) => {
             const result = await orders.find({ customer_id, status: { $ne: 'cart' } });
             const data = await Promise.all(
 
-                result.map(async(each) => {
+                result.map(async (each) => {
 
                     const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
                     const { location, ser_id } = await locservice.findById(ser_loc_id);
@@ -293,7 +293,7 @@ app.get('/orders', async(req, res, next) => {
 
 })
 
-app.put('/orders', async(req, res, next) => {
+app.put('/orders', async (req, res, next) => {
 
     try {
 
@@ -322,7 +322,7 @@ app.put('/orders', async(req, res, next) => {
 })
 
 
-app.delete('/orders', async(req, res, next) => {
+app.delete('/orders', async (req, res, next) => {
 
 
     try {
@@ -349,7 +349,7 @@ app.delete('/orders', async(req, res, next) => {
 
 })
 
-app.get('/serviceproviders', async(req, res, next) => {
+app.get('/serviceproviders', async (req, res, next) => {
 
     try {
 
@@ -376,17 +376,31 @@ app.get('/serviceproviders', async(req, res, next) => {
 })
 
 
-app.get('/agents', async(req, res, next) => {
-
+app.get('/agents', async (req, res, next) => {
 
     try {
 
-        const { user_id } = req.query;
-        console.log(user_id)
+        const { user_id, verified_by } = req.query;
 
-        const { location, verified } = await agents.findOne({ user_id: user_id })
+        if (verified_by) {
 
-        res.json({ location, verified });
+            const agents_data = await agents.find({ verified_by })
+            const data = await Promise.all(
+
+                agents_data.map(async (each) => {
+                    const { user_id, location } = each;
+                    const { name, mobile, img } = await User.findById(user_id);
+                    return { location, name, mobile, img }
+
+                })
+            )
+            res.json(data)
+        }
+        else {
+            const { location, verified } = await agents.findOne({ user_id: user_id })
+
+            res.json({ location, verified });
+        }
 
     } catch (err) {
         next(err);
@@ -396,7 +410,7 @@ app.get('/agents', async(req, res, next) => {
 })
 
 
-app.post('/requests', async(req, res, next) => {
+app.post('/requests', async (req, res, next) => {
 
 
     try {
@@ -408,8 +422,8 @@ app.post('/requests', async(req, res, next) => {
             console.log(result)
             const agent_data = await agents.findOne({ location })
             if (agent_data) {
-                const {_id}=await User.findById(agent_data.user_id);
-                const result = await requests.create({ req_to:_id, req_from, status: 'Pending' });
+                const { _id } = await User.findById(agent_data.user_id);
+                const result = await requests.create({ req_to: _id, req_from, status: 'Pending' });
 
                 res.json(result);
             } else {
@@ -417,7 +431,7 @@ app.post('/requests', async(req, res, next) => {
             }
         } else {
             await agents.findByIdAndUpdate({ _id: req_from }, { location }, { new: true });
-            
+
             const admin_data = await User.findOne({ role: 'admin' })
 
             const result = await requests.create({ req_to: admin_data._id, req_from, status: 'Pending' });
@@ -438,34 +452,36 @@ app.post('/requests', async(req, res, next) => {
 })
 
 
-app.get('/requests', async(req, res, next) => {
+app.get('/requests', async (req, res, next) => {
 
 
     try {
 
-        const { req_to,transaction_flag,req_from } = req.query;
-     if(req_from){
-      const result=await requests.findOne({req_from});
-       
-      res.json(result);
-    
+        const { req_to, transaction_flag, req_from } = req.query;
+        if (req_from != null) {
+            const result = await requests.findOne({ req_from });
+            console.log('ji')
+            res.json(result);
+        }
+        else {
+            const req_data = await requests.find({ req_to, status: !transaction_flag ? 'Pending' : { $ne: 'Pending' } });
+            const data = await Promise.all(
 
-
-     }
-     else{
-        const req_data = await requests.find({ req_to, status: !transaction_flag?'Pending':{$ne:'Pending'} });
-
-        const data =await Promise.all(
-
-            req_data.map(async(each) => {
-                const { date, req_from,status } = each;
-                const { name, mobile } = await User.findById(req_from);
-                const { proffision, location,_id } = await serviceProviders.findOne({ user_id: req_from });
-
-                return { date, name, mobile, proffision, location,req_id:each._id,req_ser_pro_id:_id,status };
-            })
-        )
-        res.json(data);}
+                req_data.map(async (each) => {
+                    const { date, req_from, status } = each;
+                    const { name, mobile } = await User.findById(req_from);
+                    const x = await serviceProviders.findOne({ user_id: req_from });
+                    if (x) {
+                        return { date, name, mobile, proffision: x.proffision, location: x.location, req_id: each._id, req_ser_pro_id: s._id, status };
+                    }
+                    else {
+                        const { _id, location } = await agents.findOne({ user_id: req_from })
+                        return { date, name, mobile, req_id: each._id, req_agent_id: _id, status, location }
+                    }
+                })
+            )
+            res.json(data);
+        }
 
     } catch (err) {
         next(err);
@@ -476,34 +492,37 @@ app.get('/requests', async(req, res, next) => {
 })
 
 
-app.put('/requests',async (req,res,next)=>{
+app.put('/requests', async (req, res, next) => {
 
 
-try{
+    try {
 
-const {req_id,status,rating,verified_by,req_ser_pro_id}=req.query;
+        const { req_id, status, rating, verified_by, req_ser_pro_id, req_agent_id } = req.query;
 
-const result =await requests.findByIdAndUpdate({_id:req_id},{status});
-if(status=="Accept")
-    {
-        const ser_pro_update=await serviceProviders.findByIdAndUpdate(req_ser_pro_id,{rating,verified_by,verified:true})
-         res.json({ser_pro_update,result})
+        const result = await requests.findByIdAndUpdate({ _id: req_id }, { status });
+        if (status == "Accept" && req_ser_pro_id) {
+            const ser_pro_update = await serviceProviders.findByIdAndUpdate(req_ser_pro_id, { rating, verified_by, verified: true })
+            res.json({ ser_pro_update, result })
+        }
+        else if (status == "Accept" && req_agent_id) {
+            const age_update = await agents.findByIdAndUpdate(req_agent_id, { verified_by, verified: true })
+            res.json({ age_update, result })
+        }
+        else {
+            res.json(result);
+        }
+
     }
-else{
-    res.json(result);
-}
+    catch (err) {
+        next(err);
 
-}
-catch(err){
-next(err);
-
-}
+    }
 
 
 })
 
 
-app.put('/locservices', async(req, res, next) => {
+app.put('/locservices', async (req, res, next) => {
 
 
     try {
@@ -531,7 +550,7 @@ app.put('/locservices', async(req, res, next) => {
 });
 
 //to get services data by location (admin)
-app.get('/locservices', async(req, res, next) => {
+app.get('/locservices', async (req, res, next) => {
 
     try {
 
@@ -539,7 +558,7 @@ app.get('/locservices', async(req, res, next) => {
         const locservices = await locservice.find({ location });
 
         const services_inc = await Promise.all(
-            locservices.map(async(each) => {
+            locservices.map(async (each) => {
 
                 const { ser_id } = each;
                 const each_service = await services.findById(ser_id);
@@ -577,7 +596,7 @@ app.get('/locservices', async(req, res, next) => {
 })
 
 //to decide which services available in particular location by agent
-app.post('/locservices', async(req, res, next) => {
+app.post('/locservices', async (req, res, next) => {
 
     try {
 
@@ -603,30 +622,29 @@ app.post('/locservices', async(req, res, next) => {
 
 
 
-app.get('/agent_serviceprovider',async (req,res,next)=>{
+app.get('/agent_serviceprovider', async (req, res, next) => {
 
-try{
+    try {
 
-const {agent_id}=req.query;
+        const { agent_id } = req.query;
 
 
-const result=await serviceProviders.find({verified_by:agent_id})
+        const result = await serviceProviders.find({ verified_by: agent_id })
 
-const data=await Promise.all(result.map(async (each)=>{
+        const data = await Promise.all(result.map(async (each) => {
 
-const {user_id,proffision,rating,_id}=each;
-const {name,img,mobile}=await User.findById(user_id)
+            const { user_id, proffision, rating, _id } = each;
+            const { name, img, mobile } = await User.findById(user_id)
 
-return {name,img,proffision,rating,mobile,ser_pro_id:_id}
+            return { name, img, proffision, rating, mobile, ser_pro_id: _id }
 
-}))
+        }))
 
-res.json(data);
-}
-catch(err)
-{
-    next(err);
-}
+        res.json(data);
+    }
+    catch (err) {
+        next(err);
+    }
 
 
 })
@@ -634,24 +652,24 @@ catch(err)
 
 
 //work in progress
-app.post('/services', async(req, res, next) => {
+app.post('/services', async (req, res, next) => {
 
 
     try {
 
-       
-            const { ser_name, category } = req.body;
-            const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
-                folder: 'services',
-                public_id: ser_name,
-            });
 
-            fs.unlinkSync(req.files[0].path);
+        const { ser_name, category } = req.body;
+        const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
+            folder: 'services',
+            public_id: ser_name,
+        });
 
-            const response = await services.create({ category, img: imgresult.secure_url, name: ser_name });
+        fs.unlinkSync(req.files[0].path);
 
-            res.json(response);
-        
+        const response = await services.create({ category, img: imgresult.secure_url, name: ser_name });
+
+        res.json(response);
+
 
     } catch (err) {
         next(err);
@@ -661,7 +679,7 @@ app.post('/services', async(req, res, next) => {
 
 })
 
-app.get('/services', async(req, res, next) => {
+app.get('/services', async (req, res, next) => {
 
 
     try {
@@ -685,7 +703,7 @@ app.get('/services', async(req, res, next) => {
 
 })
 
-app.delete('/services', async(req, res, next) => {
+app.delete('/services', async (req, res, next) => {
 
     try {
 
@@ -705,7 +723,7 @@ app.delete('/services', async(req, res, next) => {
 })
 
 
-app.get('/ser_myservices', async(req, res) => {
+app.get('/ser_myservices', async (req, res) => {
 
 
     const { user_id } = req.query;
@@ -713,7 +731,7 @@ app.get('/ser_myservices', async(req, res) => {
 
     const ser_pro = await serprocost.find({ ser_pro: _id });
     const data = await Promise.all(
-        ser_pro.map(async(each) => {
+        ser_pro.map(async (each) => {
             const { ser_loc_id, time, cost } = each;
             const { ser_id, location } = await locservice.findById(ser_loc_id);
             const { img, name } = await services.findById(ser_id);
@@ -727,7 +745,7 @@ app.get('/ser_myservices', async(req, res) => {
 })
 
 
-app.post('/passchange', async(req, res, next) => {
+app.post('/passchange', async (req, res, next) => {
 
     console.log(req.body);
     const { token } = req.body;
@@ -735,7 +753,7 @@ app.post('/passchange', async(req, res, next) => {
 
     try {
 
-        await jwt.verify(token, process.env.KEY, async(err, decode) => {
+        await jwt.verify(token, process.env.KEY, async (err, decode) => {
 
             if (err) {
                 next(err)
@@ -758,7 +776,7 @@ app.post('/passchange', async(req, res, next) => {
 })
 
 
-app.post('/forget/verify', async(req, res, next) => {
+app.post('/forget/verify', async (req, res, next) => {
 
 
     try {
@@ -786,7 +804,7 @@ app.post('/forget/verify', async(req, res, next) => {
 
 
 
-app.post('/forget', async(req, res, next) => {
+app.post('/forget', async (req, res, next) => {
 
     try {
 
@@ -813,7 +831,7 @@ app.post('/forget', async(req, res, next) => {
                 to: [{
                     email: email, // Recipient's email address
                     name: 'our customer', // Optional
-                }, ],
+                },],
                 subject: 'RESET PASSWORD FROM Skill Link',
                 htmlContent: `<html>
                     <body>
@@ -858,7 +876,7 @@ app.post('/logout', (req, res, next) => {
 
 })
 
-app.post('/register', async(req, res, next) => {
+app.post('/register', async (req, res, next) => {
     try {
         const { name, email, password, mobile } = req.body.FormData;
         const { role } = req.body;
@@ -888,7 +906,7 @@ app.post('/register', async(req, res, next) => {
 
 });
 
-app.post('/send-otp', async(req, res, next) => {
+app.post('/send-otp', async (req, res, next) => {
 
     const { email } = req.body;
 
@@ -924,7 +942,7 @@ app.post('/send-otp', async(req, res, next) => {
                 to: [{
                     email: email, // Recipient's email address
                     name: 'our customer', // Optional
-                }, ],
+                },],
                 subject: 'OTP FROM Skill Link',
                 htmlContent: `<html>
                     <body>
@@ -950,7 +968,7 @@ app.post('/send-otp', async(req, res, next) => {
 });
 
 
-app.post('/verify-otp', async(req, res, next) => {
+app.post('/verify-otp', async (req, res, next) => {
 
     const { email, otp } = req.body;
 
@@ -976,12 +994,12 @@ app.post('/verify-otp', async(req, res, next) => {
     }
 });
 
-app.post('/get-user', async(req, res, next) => {
+app.post('/get-user', async (req, res, next) => {
 
 
     const accessToken = req.cookies.accessToken;
     if (!accessToken) next(new Error("jwt token not found"));
-    await jwt.verify(accessToken, process.env.KEY, async(err, decode) => {
+    await jwt.verify(accessToken, process.env.KEY, async (err, decode) => {
 
         if (err) {
             next(err);
@@ -998,7 +1016,7 @@ app.post('/get-user', async(req, res, next) => {
 
 })
 
-app.post('/login', async(req, res, next) => {
+app.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
 

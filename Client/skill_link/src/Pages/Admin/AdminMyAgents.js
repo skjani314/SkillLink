@@ -1,19 +1,49 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import userContext from '../../Components/Login/UserContext';
-import { useContext } from 'react';
-import { Spin } from 'antd';
+import { useContext, useState } from 'react';
+import { Spin, Flex } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import AdminSideBar from './AdminSideBar';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import AgentCard from '../../Components/Cards/AgentCard';
 
 const AdminMyAgents = props => {
 
 
-    const { contextHolder, error, user, setUser, success, loading, activeTab } = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, activeTab } = useContext(userContext);
+    const [agentsData, setagentsData] = useState([]);
+    const [loading,setLoading]=useState(false);
+    const { id } = useParams();
 
-    const {id}=useParams();
-    if(id!=user._id){
-    return null;
+    useEffect(() => {
+
+        const getData = async () => {
+
+setLoading(true);
+            try {
+      
+                const result = await axios.get('/agents?verified_by=' + user._id)
+                setagentsData([...result.data])
+            }
+            catch (err) {
+                console.log(err);
+            }
+setLoading(false);
+
+        }
+
+        getData();
+
+    }, [])
+
+
+
+
+
+
+    if (id != user._id) {
+        return null;
     }
 
     return (
@@ -27,10 +57,17 @@ const AdminMyAgents = props => {
                         <div className="sidebar-container">
                             <AdminSideBar />
                         </div>
-                        <div className="main-content">
+                        <div className="main-content" style={{ marginTop: '30px' }}>
 
                             <div className="dashboard-container pt-3">
-                                    Admin My Agents
+                                <h1 className='p-1 m-1'>My Agents</h1>
+                                <Flex wrap gap={10} justify='around'>
+                                    {
+                                        agentsData.map((each) => (
+                                            <AgentCard data={each} />
+                                        ))
+                                    }
+                                </Flex>
                             </div>
                         </div>
                     </div>

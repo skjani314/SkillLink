@@ -108,6 +108,9 @@ const data={
                          setserProData([...agent_result.data]);
                 setUser({...result.data,...agent_data.data});
                }
+               else{
+                setUser({...result.data})
+               }
 console.log(user);
                flag=true;
                return true;

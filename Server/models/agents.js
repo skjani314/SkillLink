@@ -10,7 +10,7 @@ user_id:{
 },
 verified:Boolean,
 location:Number,
-verified_by:{type:mongoose.Schema.Types.ObjectId,ref:'admins'}
+verified_by:{type:mongoose.Schema.Types.ObjectId,ref:'users'}
 
 });
 

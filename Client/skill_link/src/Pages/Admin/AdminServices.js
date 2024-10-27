@@ -28,7 +28,7 @@ const AdminServices = props => {
                         <div className="sidebar-container">
                             <AdminSideBar />
                         </div>
-                        <div className="main-content">
+                        <div className="main-content" style={{marginTop:'30px'}}>
 
                             <div className="dashboard-container pt-3">
                                     Admin Services
