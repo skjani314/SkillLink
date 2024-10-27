@@ -1,27 +1,21 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import userContext from '../../Components/Login/UserContext';
 import { useContext } from 'react';
-import { Spin,Flex } from 'antd';
+import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
-import AgentSideBar from './AgentSideBar';
+import AdminSideBar from './AdminSideBar';
 import { useParams } from 'react-router-dom';
-import ServiceProvider from '../../Components/Cards/ServiceProvider';
 
 
-const AgeSuppliers = props => {
 
+const AdminTransaction = props => {
 
-    const { contextHolder, error, user, setUser, success, loading, activeTab ,changeActiveTab,serProData} = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, loading, activeTab } = useContext(userContext);
+
     const {id}=useParams();
-useEffect(()=>{
-    changeActiveTab("MYSUPPLIERS")
-
-},[])
-
-
     if(id!=user._id){
     return null;
-    }
+    } 
 
 
     return (
@@ -33,19 +27,12 @@ useEffect(()=>{
 
                     <div className="header-down">
                         <div className="sidebar-container">
-                            <AgentSideBar />
+                            <AdminSideBar />
                         </div>
                         <div className="main-content">
 
                             <div className="dashboard-container pt-3">
-                                    <h1>My Suppliers</h1>
-<br></br>
-                                   <Flex gap={10} wrap>
-                                    {serProData.map((each)=>(
-                                    <ServiceProvider data={each} agent={true}/>
-                                    ))
-}
-                                    </Flex> 
+                                    Admin Transactions
                             </div>
                         </div>
                     </div>
@@ -56,6 +43,8 @@ useEffect(()=>{
 
     )
 
-}
+};
 
-export default AgeSuppliers;
+
+
+export default AdminTransaction;

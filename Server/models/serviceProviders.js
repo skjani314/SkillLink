@@ -14,7 +14,7 @@ rating:Number,
 status:Boolean,
 location:Number,
 verified:Boolean,
-verified_by:{type:mongoose.Schema.Types.ObjectId,ref:'agents'}
+verified_by:{type:mongoose.Schema.Types.ObjectId,ref:'users'}
 
 });
 

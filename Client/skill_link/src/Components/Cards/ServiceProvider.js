@@ -5,6 +5,7 @@ import './card.css';
 import { MdOutlineWork } from 'react-icons/md';
 import userContext from '../Login/UserContext.js';
 import axios from 'axios';
+import { FaPhone } from 'react-icons/fa6';
 
 const ServiceProvider = props => {
 
@@ -62,9 +63,12 @@ setLoading(false);
                    <Rate value={props.data.rating} allowHalf className='container px-0'></Rate>
 
                    <Text ><MdOutlineWork/> {props.data.proffision}</Text>
+{!props.agent?
                    <Text ><FaRupeeSign className='mb-1'/> {props.data.cost}</Text>
+                   :<Text><FaPhone className='mb-1'/>  {props.data.mobile}</Text>
+}
                    <Text ><FaClock className='mb-1'/> {props.data.time+" minuetes"}</Text>
-                   <Button className='bg-warning sr-card' block onClick={handleAddCartClick}>Add to Cart</Button>
+                   {!props.agent?<Button className='bg-warning sr-card' block onClick={handleAddCartClick}>Add to Cart</Button>:null}
                   </Flex>
                 </Flex>
             </Card>

@@ -86,7 +86,7 @@ const handleCancel = () => {
         { 
             
             ser_pro_data.map((each)=>(
-            <ServiceProvider data={each} key={each._id} handleCancel={handleCancel}/>
+            <ServiceProvider data={each} agent={props.agent} key={each._id} handleCancel={handleCancel}/>
            
         ))
            }

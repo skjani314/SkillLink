@@ -443,22 +443,29 @@ app.get('/requests', async(req, res, next) => {
 
     try {
 
-        const { req_to } = req.query;
+        const { req_to,transaction_flag,req_from } = req.query;
+     if(req_from){
+      const result=await requests.findOne({req_from});
+       
+      res.json(result);
+    
 
-        const req_data = await requests.find({ req_to, status: 'Pending' });
+
+     }
+     else{
+        const req_data = await requests.find({ req_to, status: !transaction_flag?'Pending':{$ne:'Pending'} });
 
         const data =await Promise.all(
 
             req_data.map(async(each) => {
-                const { date, req_from } = each;
+                const { date, req_from,status } = each;
                 const { name, mobile } = await User.findById(req_from);
                 const { proffision, location,_id } = await serviceProviders.findOne({ user_id: req_from });
 
-                return { date, name, mobile, proffision, location,req_id:each._id,req_ser_pro_id:_id };
+                return { date, name, mobile, proffision, location,req_id:each._id,req_ser_pro_id:_id,status };
             })
         )
-console.log("req:"+data);
-        res.json(data);
+        res.json(data);}
 
     } catch (err) {
         next(err);
@@ -551,6 +558,7 @@ app.get('/locservices', async(req, res, next) => {
                     category: each_service.category,
                     service_providers: [...service_providers],
                     max,
+                    ser_id,
                 }
 
             })
@@ -593,24 +601,45 @@ app.post('/locservices', async(req, res, next) => {
 
 })
 
+
+
+app.get('/agent_serviceprovider',async (req,res,next)=>{
+
+try{
+
+const {agent_id}=req.query;
+
+
+const result=await serviceProviders.find({verified_by:agent_id})
+
+const data=await Promise.all(result.map(async (each)=>{
+
+const {user_id,proffision,rating,_id}=each;
+const {name,img,mobile}=await User.findById(user_id)
+
+return {name,img,proffision,rating,mobile,ser_pro_id:_id}
+
+}))
+
+res.json(data);
+}
+catch(err)
+{
+    next(err);
+}
+
+
+})
+
+
+
 //work in progress
 app.post('/services', async(req, res, next) => {
 
 
     try {
 
-        if (req.files.length > 1) {
-
-
-            const workbook = xlsx.readFile(req.files[0].path, { cellDates: true });
-
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-            const data = xlsx.utils.sheet_to_json(worksheet);
-            fs.unlinkSync(req.files[0].path);
-
-            console.log(data);
-        } else {
+       
             const { ser_name, category } = req.body;
             const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
                 folder: 'services',
@@ -622,7 +651,7 @@ app.post('/services', async(req, res, next) => {
             const response = await services.create({ category, img: imgresult.secure_url, name: ser_name });
 
             res.json(response);
-        }
+        
 
     } catch (err) {
         next(err);

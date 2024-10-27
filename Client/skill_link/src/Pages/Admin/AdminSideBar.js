@@ -6,6 +6,7 @@ import { CgProfile } from "react-icons/cg";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import userContext from "../../Components/Login/UserContext";
+import { GrTransaction } from "react-icons/gr";
 const sidebarItems=[
     {
         id:"DASHBOARD",
@@ -31,6 +32,12 @@ const sidebarItems=[
         displayText:'Profile',
         icon:<CgProfile className="mb-2"/>,
         path:'/profile'
+    },
+    {
+        id:"TRANSACTION",
+        displayText:'Transactions',
+        icon:<GrTransaction className="mb-2"/>,
+        path:'/transaction'
     },
    
 ]

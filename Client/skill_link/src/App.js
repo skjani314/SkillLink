@@ -23,6 +23,8 @@ import AdminDashboard from './Pages/Admin/AdminDashboard.js';
 import AdminServices from './Pages/Admin/AdminServices.js'
 import AdminMyAgents from './Pages/Admin/AdminMyAgents.js';
 import AdminProfile from './Pages/Admin/AdminProfile.js';
+import AgeTransaction from './Pages/Agent/AgeTransaction.js';
+import AdminTransaction from './Pages/Admin/AdminTransaction.js';
 
 function App() {
 
@@ -36,6 +38,7 @@ const [orders,setOrders]=useState([]);
 const [address,setAddress]=useState([]);
 const [total_cost, setTotalCost] = useState(0);
 const [activeTab,setActiveTab]=useState('DASHBOARD');
+const [serProData, setserProData] = useState([]);
 
 let flag=false;
 
@@ -80,6 +83,8 @@ const data={
   setTotalCost,
   activeTab,
   changeActiveTab:changeActiveTab,
+  serProData,
+  setserProData
 
 
 }
@@ -99,6 +104,8 @@ const data={
                else if(result.data.role=='agent'){
                 const agent_data=await axios.get('/agents?user_id='+result.data._id);
                 console.log(agent_data.data)
+                  const agent_result = await axios.get('/agent_serviceprovider?agent_id=' + result.data._id);
+                         setserProData([...agent_result.data]);
                 setUser({...result.data,...agent_data.data});
                }
 console.log(user);
@@ -207,6 +214,9 @@ setTotalCost(x);
        <Route path='/agents/:id/services' element={user && user.role==='agent' && user.verified?<AgeService/>:user && !user.verified?<AgeDashboard/>:null}/>
        <Route path='/agents/:id/mysuppliers' element={user && user.role==='agent' && user.verified?<AgeSuppliers/>:user && !user.verified?<AgeDashboard/>:null}/>
        <Route path='/agents/:id/profile' element={user && user.role==='agent' && user.verified?<AgeProfile/>:user && !user.verified?<AgeDashboard/>:null}/>
+       <Route path='/agents/:id/transaction' element={user && user.role==='agent' && user.verified?<AgeTransaction/>:user && !user.verified?<AgeDashboard/>:null}/>
+      
+       <Route path='/admins/:id/transaction' element={user && user.role==='admin'?<AdminTransaction/>:null}/>
        <Route path='/admins/:id/dashboard' element={user && user.role==='admin'?<AdminDashboard/>:null}/>
        <Route path='/admins/:id/services' element={user && user.role==='admin'?<AdminServices/>:null}/>
        <Route path='/admins/:id/myagents' element={user && user.role==='admin'?<AdminMyAgents/>:null}/>
