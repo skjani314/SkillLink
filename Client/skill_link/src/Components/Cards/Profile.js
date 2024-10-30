@@ -12,7 +12,8 @@ const Profile = props => {
     const { proffision, location, rating } = props.data;
     const [editData, setEditData] = useState({ isopen: false, mobile: props.data.mobile, name: props.data.name })
     const [fileList, setFileList] = useState([]);
-    const { loading, setLoading, error, success, user, setUser } = useContext(userContext);
+    const { error, success,   setCurrLocation,    } = useContext(userContext);
+    const [loading,setLoading]=useState(false)
     const handleUploadChange = ({ fileList }) => {
         setFileList(fileList);
     };
@@ -27,14 +28,14 @@ const Profile = props => {
             const form_data = new FormData();
             form_data.append('name', editData.name);
             form_data.append('mobile', editData.mobile);
-            form_data.append('id', user._id)
+            form_data.append('id', props.data._id)
             fileList.forEach(file => {
                 form_data.append('img', file.originFileObj);
             });
-            const result = axios.post('/profile', form_data)
+            const result = await axios.post('/profile', form_data)
             console.log(result)
             success("Updated Successfully")
-            setUser((prev) => ({ ...prev }))
+            setCurrLocation((prev)=>({...prev}))
         }
         catch (err) {
             console.log(err);
@@ -70,7 +71,7 @@ const Profile = props => {
 
                 </Flex>
             </Card>
-            <center><Button type='primary' onClick={() => setEditData((prev) => ({ ...prev, isopen: true }))}>Edit</Button> </center>
+            <center className='mt-3'><Button type='primary' onClick={() => setEditData((prev) => ({ ...prev, isopen: true }))}>Edit</Button> </center>
 
 
             <Modal open={editData.isopen} footer={<Button type='primary' onClick={handleSubmit}>Update</Button>} onCancel={() => setEditData({ isopen: false, mobile: props.data.mobile, img: props.data.img, name: props.data.name })}>

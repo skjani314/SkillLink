@@ -655,7 +655,7 @@ app.post('/profile',async (req,res,next)=>{
 
 try{
 
-const {mobile,name,id}=req.query
+const {mobile,name,id}=req.body
 
 
 const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
@@ -667,6 +667,7 @@ fs.unlinkSync(req.files[0].path);
 
 const upresult=await User.findByIdAndUpdate(id,{mobile,name,img:imgresult.secure_url},{new:true})
 res.json(upresult)
+
 
 }
 catch(err){
