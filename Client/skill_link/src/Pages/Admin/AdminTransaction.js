@@ -13,14 +13,14 @@ const {Text}=Typography;
 
 const AdminTransaction = props => {
 
-    const { contextHolder, error, user, setUser, success, activeTab } = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, activeTab, changeActiveTab } = useContext(userContext);
     const [TransactionData,setTransactionData]=useState([])
     const {id}=useParams();
     const [loading,setLoading]=useState(false)
 
 
 useEffect(()=>{
-
+    changeActiveTab('TRANSACTION')
 const getData=async ()=>{
 
 

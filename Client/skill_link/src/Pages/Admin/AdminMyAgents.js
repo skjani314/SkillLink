@@ -11,12 +11,13 @@ import AgentCard from '../../Components/Cards/AgentCard';
 const AdminMyAgents = props => {
 
 
-    const { contextHolder, error, user, setUser, success, activeTab } = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, activeTab ,changeActiveTab    } = useContext(userContext);
     const [agentsData, setagentsData] = useState([]);
     const [loading,setLoading]=useState(false);
     const { id } = useParams();
 
     useEffect(() => {
+        changeActiveTab('MYAGENTS')
 
         const getData = async () => {
 

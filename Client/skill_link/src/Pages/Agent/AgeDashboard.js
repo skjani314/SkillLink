@@ -52,7 +52,7 @@ const AgeDashboard = props => {
 
 
 
-    }, [loading])
+    }, [loading,user])
 
     const handleReqClick = async () => {
 
@@ -75,7 +75,7 @@ const AgeDashboard = props => {
 
     }
 
-
+console.log(user)
 
 
     if (id != user._id) {
@@ -128,7 +128,7 @@ const AgeDashboard = props => {
 
                                             <div className="dashboard-container pt-3">
                                                 {
-                                                    formdata.status !== 'Pending' ?
+                                                    user.status !== 'Pending' ?
                                                         <>
                                                             <h2>Enter The Location Where Do You want to Work</h2>
                                                             <center>

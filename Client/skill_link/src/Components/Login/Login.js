@@ -18,7 +18,7 @@ const [lcase,setLcase]=useState(false);
 const [ucase,setUcase]=useState(false);
 const [dig,setDig]=useState(false);
 const [spc,setSpc]=useState(false);
-const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
+const {user,setUser,loading,setLoading,success,error,contextHolder,setserProData}=useContext(userContext);
 const [forgetpass,setForgetPass]=useState({email:'',flag:false});
 const {otpform,setOtpform}=props;
 const navigate=useNavigate();
@@ -202,7 +202,25 @@ try{
         setLogdata({email:'',password:''});
         
         const result= await axios.post('/get-user');
-        setUser(result.data);
+        if(result.data.role=='supplier'){
+          const ser_pro_data=await axios.get('/serviceproviders?id='+result.data._id);
+          setUser({...result.data,...ser_pro_data.data})
+         }
+         else if(result.data.role=='agent'){
+          const agent_data=await axios.get('/agents?user_id='+result.data._id);
+          console.log(agent_data.data)
+            const agent_result = await axios.get('/agent_serviceprovider?agent_id=' + result.data._id);
+                   setserProData([...agent_result.data]);
+          setUser({...result.data,...agent_data.data});
+         }
+         else{
+          setUser({...result.data})
+          console.log('not working')
+         }
+
+
+
+
 
         props.handleModalCancel();
         setLoading(false);

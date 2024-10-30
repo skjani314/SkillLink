@@ -650,6 +650,32 @@ app.get('/agent_serviceprovider', async (req, res, next) => {
 })
 
 
+app.post('/profile',async (req,res,next)=>{
+
+
+try{
+
+const {mobile,name,id}=req.query
+
+
+const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
+    folder: 'users',
+    public_id: id,
+});
+
+fs.unlinkSync(req.files[0].path);
+
+const upresult=await User.findByIdAndUpdate(id,{mobile,name,img:imgresult.secure_url},{new:true})
+res.json(upresult)
+
+}
+catch(err){
+    next(err)
+}
+
+
+
+})
 
 //work in progress
 app.post('/services', async (req, res, next) => {

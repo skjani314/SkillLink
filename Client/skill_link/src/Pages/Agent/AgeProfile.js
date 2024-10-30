@@ -5,24 +5,25 @@ import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import AgentSideBar from './AgentSideBar';
 import { useParams } from 'react-router-dom';
+import Profile from '../../Components/Cards/Profile';
 
 
 const AgeProfile = props => {
 
 
-    const { contextHolder, error, user, setUser, success, loading, activeTab,changeActiveTab } = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, loading, activeTab, changeActiveTab } = useContext(userContext);
 
-    const {id}=useParams();
+    const { id } = useParams();
 
 
-useEffect(()=>{
+    useEffect(() => {
 
-    changeActiveTab("PROFILE")
+        changeActiveTab("PROFILE")
 
-},[])
+    }, [])
 
-    if(id!=user._id){
-    return null;
+    if (id != user._id) {
+        return null;
     }
 
     return (
@@ -39,7 +40,7 @@ useEffect(()=>{
                         <div className="main-content">
 
                             <div className="dashboard-container pt-3">
-                                    AGe Profile
+                                <Profile data={user}/>
                             </div>
                         </div>
                     </div>

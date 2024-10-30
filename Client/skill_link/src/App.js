@@ -44,7 +44,6 @@ let flag=false;
 
 
 
-
 const success = (msg) => {
   messageApi.open({
     type: 'success',
@@ -110,9 +109,9 @@ const data={
                }
                else{
                 setUser({...result.data})
+                console.log('not working')
                }
 console.log(user);
-               flag=true;
                return true;
         }
         catch(err)
@@ -137,13 +136,10 @@ catch(err){
 }
     }
    
-  if(!flag){
 getUser();
 getData();
-}
 setLoading(false);
 
-  return ()=>{flag=true;}
   },[currLocation])
 
 

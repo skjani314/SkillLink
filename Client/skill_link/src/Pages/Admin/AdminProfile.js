@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import userContext from '../../Components/Login/UserContext';
 import { useContext } from 'react';
 import { Spin } from 'antd';
@@ -9,8 +9,17 @@ import { useParams } from 'react-router-dom';
 const AdminProfile = props => {
 
 
-    const { contextHolder, error, user, setUser, success, loading, activeTab } = useContext(userContext);
+    const { contextHolder, error, user, setUser, success, loading, activeTab ,changeActiveTab} = useContext(userContext);
     const {id}=useParams();
+
+
+useEffect(()=>{
+    changeActiveTab('PROFILE')
+
+},[])
+
+
+
     if(id!=user._id){
     return null;
     }

@@ -5,7 +5,7 @@ import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import './ServiceProvider.css'
-import Profile from '../../Components/profile/Profile';
+import Profile from '../../Components/Cards/Profile.js';
 import { useParams } from 'react-router-dom';
 
 const SerProfile = props => {
@@ -36,7 +36,7 @@ return null;
                             <Sidebar />
                         </div>
                         <div className="main-content">
-                             <Profile/>
+                             <Profile data={user}/>
                         </div>
                     </div>
 
