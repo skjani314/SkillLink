@@ -1,83 +1,36 @@
 import { Col, Row } from 'antd';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import CategoryCard from '../../Components/Cards/CategoryCard';
 import './ServicePage.css';
 import Nav from '../../Components/NavBar/Nav';
 import Footer from '../../Components/Footer/Footer';
 import SearchResult from '../../Components/SearchResult/SearchResult';
+import userContext from '../../Components/Login/UserContext';
+import { useLocation, useParams } from 'react-router-dom';
 
 const ServicePage = props => {
 
 
-    const data = [
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1681711961404-75dfec.jpeg',
-            name: "Home Service"
-        },
-        {
-            imgurl: 'https://images.ctfassets.net/uwf0n1j71a7j/3Q5rRFTIW53lWJfUwscjCN/93475acc785944131b85402f5207e969/why-routine-car-servicing-must-for-vehicle.png',
-            name: 'Automobile Service'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg',
-            name: "Beauty Service"
-        },
-        {
-            imgurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX9MdFpRoOWq4BjHfLmw0M-v3PvUaPYcZkDg&s',
-            name: 'Pest Control'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1681711961404-75dfec.jpeg',
-            name: "Home Service"
-        },
-        {
-            imgurl: 'https://images.ctfassets.net/uwf0n1j71a7j/3Q5rRFTIW53lWJfUwscjCN/93475acc785944131b85402f5207e969/why-routine-car-servicing-must-for-vehicle.png',
-            name: 'Automobile Service'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg',
-            name: "Beauty Service"
-        },
-        {
-            imgurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX9MdFpRoOWq4BjHfLmw0M-v3PvUaPYcZkDg&s',
-            name: 'Pest Control'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1681711961404-75dfec.jpeg',
-            name: "Home Service"
-        },
-        {
-            imgurl: 'https://images.ctfassets.net/uwf0n1j71a7j/3Q5rRFTIW53lWJfUwscjCN/93475acc785944131b85402f5207e969/why-routine-car-servicing-must-for-vehicle.png',
-            name: 'Automobile Service'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg',
-            name: "Beauty Service"
-        },
-        {
-            imgurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX9MdFpRoOWq4BjHfLmw0M-v3PvUaPYcZkDg&s',
-            name: 'Pest Control'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/growth/home-screen/1681711961404-75dfec.jpeg',
-            name: "Home Service"
-        },
-        {
-            imgurl: 'https://images.ctfassets.net/uwf0n1j71a7j/3Q5rRFTIW53lWJfUwscjCN/93475acc785944131b85402f5207e969/why-routine-car-servicing-must-for-vehicle.png',
-            name: 'Automobile Service'
-        },
-        {
-            imgurl: 'https://res.cloudinary.com/urbanclap/image/upload/t_high_res_category/w_56,dpr_1,fl_progressive:steep,q_auto:low,f_auto,c_limit/images/supply/customer-app-supply/1678864013225-bfc1de.jpeg',
-            name: "Beauty Service"
-        },
-        {
-            imgurl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX9MdFpRoOWq4BjHfLmw0M-v3PvUaPYcZkDg&s',
-            name: 'Pest Control'
-        },
-
-    ]
+const [categorydata,setCategoryData]=useState([])
+const {servicesData,loading,setLoading,user,setSearchVal}=useContext(userContext);
+const location=useLocation();
+const query = new URLSearchParams(location.search);
+const [resultdata,setResultdata]=useState([]);
 
 
+
+useEffect(()=>{
+
+
+
+    const uniqueData = Array.from(
+        new Map(servicesData.map(item => [item.category, item])).values()
+      );
+
+      setCategoryData(uniqueData)
+
+
+},[])
 
 
 
@@ -90,13 +43,13 @@ const ServicePage = props => {
 
                     <Col className='category'>
                         {
-                            data.map((each) => (<CategoryCard data={each} />))
+                            categorydata.map((each,index) => (<CategoryCard key={index} data={each} />))
                         }
                     </Col>
 
                 </Row>
             </div>
-            <SearchResult />
+            <SearchResult query={query.get('name')} resultdata={resultdata} setResultdata={setResultdata} />
             <Footer />
         </>
     );
