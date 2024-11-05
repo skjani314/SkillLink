@@ -686,6 +686,7 @@ app.post('/services', async (req, res, next) => {
 
 
         const { ser_name, category } = req.body;
+        
         const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
             folder: 'services',
             public_id: ser_name,
