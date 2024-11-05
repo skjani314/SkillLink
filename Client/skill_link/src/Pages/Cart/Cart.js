@@ -8,6 +8,7 @@ import axios from 'axios';
 import userContext from '../../Components/Login/UserContext';
 import TextField from '@mui/material/TextField';
 import Footer from '../../Components/Footer/Footer';
+import { useLocation } from 'react-router-dom';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -15,12 +16,12 @@ const Cart = props => {
 
     const screens = useBreakpoint();
 
-    const { user, setUser, error, success, loading, setLoading, orders, setOrders, address, setAddress, total_cost, setTotalCost, contextHolder } = useContext(userContext);
+    const { user, setUser, error, success, setSearchVal,loading, setLoading, orders, setOrders, address, setAddress, total_cost, setTotalCost, contextHolder } = useContext(userContext);
     const [isopen, setisopen] = useState(false);
     const [formData, setFormData] = useState({ pincode: '', addr: '' })
     const [address_id, setAddrId] = useState('');
 
-
+   
     const handleAddAddress = async () => {
 
 
@@ -106,7 +107,7 @@ const Cart = props => {
 
                                     }
                                 </Row>
-
+ 
 
                             </Col>
                             <Col md={{ span: 8, offset: 1 }} sm={{ span: 22, offset: 1 }} xs={{ span: 22, offset: 1 }} className='mb-5 pb-3' >

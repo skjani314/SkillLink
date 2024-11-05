@@ -39,6 +39,7 @@ const [address,setAddress]=useState([]);
 const [total_cost, setTotalCost] = useState(0);
 const [activeTab,setActiveTab]=useState('DASHBOARD');
 const [serProData, setserProData] = useState([]);
+const [search_Val,setSearchVal]=useState("");
 
 let flag=false;
 
@@ -83,7 +84,9 @@ const data={
   activeTab,
   changeActiveTab:changeActiveTab,
   serProData,
-  setserProData
+  setserProData,
+  search_Val,
+  setSearchVal
 
 
 }

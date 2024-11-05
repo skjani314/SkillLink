@@ -265,14 +265,14 @@ app.get('/orders', async (req, res, next) => {
             const data = await Promise.all(
 
                 result.map(async (each) => {
-
+                     const {status}=each;
                     const { cost, time, ser_loc_id, ser_pro } = await serprocost.findById(each.ser_pro_cost);
                     const { location, ser_id } = await locservice.findById(ser_loc_id);
                     const ser_data = await services.findById(ser_id);
                     const { user_id, proffision, rating } = await serviceProviders.findById(ser_pro);
                     const { name } = await User.findById(user_id);
 
-                    return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name }
+                    return { cost, time, location, proffision, rating, ser_pro_name: name, img: ser_data.img, ser_name: ser_data.name ,status}
 
 
                 })
@@ -848,34 +848,35 @@ app.post('/forget', async (req, res, next) => {
             const token = jwt.sign({ email }, process.env.KEY, { expiresIn: '5m' });
 
 
-            const url = 'https://api.sendinblue.com/v3/smtp/email'; // Brevo's email sending endpoint
-            const apiKey = process.env.EMAIL_API_KEY; // Replace with your actual API key
-
-            const emailData = {
-                sender: {
-                    name: 'skill link',
-                    email: 'skilllinkforget@gmail.com', // Your verified sender email
-                },
-                to: [{
-                    email: email, // Recipient's email address
-                    name: 'our customer', // Optional
-                },],
-                subject: 'RESET PASSWORD FROM Skill Link',
-                htmlContent: `<html>
+           
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'skilllinkforget@gmail.com',
+      pass: process.env.EMAILPASSWORD
+    }
+  });
+  
+  const mailOptions = {
+    from: 'skilllinkforget@gmail.com',
+    to: email,
+    subject: 'Forget Password',
+    html: `<html>
                     <body>
                       <h1>Hello,</h1>
-                      <p>Your Reset link is:<br></br> <strong>${'https://3000-skjani314-skilllink-76payofl55d.ws-us116.gitpod.io/forgot/' + token}</strong></p>
+                      <p>Your Reset link is:<br></br> <strong>${process.env.FRONTENDURL+'/forgot/' + token}</strong></p>
                       <p>Thank you!</p>
                     </body>
-                  </html>`, // HTML content
-            };
-            const response = await axios.post(url, emailData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': apiKey, // Use the API key for authentication
-                },
-            });
-
+                  </html>`,
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
 
 
             res.sendStatus(200);
@@ -959,33 +960,36 @@ app.post('/send-otp', async (req, res, next) => {
             }
 
 
-            const url = 'https://api.sendinblue.com/v3/smtp/email'; // Brevo's email sending endpoint
-            const apiKey = process.env.EMAIL_API_KEY; // Replace with your actual API key
-
-            const emailData = {
-                sender: {
-                    name: 'skill link',
-                    email: 'skilllinkforget@gmail.com', // Your verified sender email
-                },
-                to: [{
-                    email: email, // Recipient's email address
-                    name: 'our customer', // Optional
-                },],
-                subject: 'OTP FROM Skill Link',
-                htmlContent: `<html>
+            
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'skilllinkforget@gmail.com',
+      pass: process.env.EMAILPASSWORD
+    }
+  });
+  
+  const mailOptions = {
+    from: 'skilllinkforget@gmail.com',
+    to: email,
+    subject: 'OTP Verification',
+    html: `<html>
                     <body>
                       <h1>Hello,</h1>
                       <p>Your OTP code is: <strong>${otp}</strong></p>
                       <p>Thank you!</p>
                     </body>
-                  </html>`, // HTML content
-            };
-            const response = await axios.post(url, emailData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': apiKey, // Use the API key for authentication
-                },
-            });
+                  </html>`
+  };
+  
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 
             res.status(200).json('email sent')
 

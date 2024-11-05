@@ -5,6 +5,7 @@ import { Spin } from 'antd';
 import TopBar from '../../Components/TopBar/TopBar';
 import AdminSideBar from './AdminSideBar';
 import { useParams } from 'react-router-dom';
+import Profile from '../../Components/Cards/Profile';
 
 const AdminProfile = props => {
 
@@ -39,7 +40,7 @@ useEffect(()=>{
                         <div className="main-content" style={{marginTop:'30px'}}>
 
                             <div className="dashboard-container pt-3">
-                                    Admin Profile
+                            <Profile data={user}/>
                             </div>
                         </div>
                     </div>

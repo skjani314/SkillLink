@@ -31,9 +31,10 @@ const AdminServices = props => {
 
 
             try {
-
+setLoading(true)
                 const result = await axios.get('/services?name=""')
                 setSerData([...result.data])
+                setLoading(false)
             }
             catch (err) {
                 console.log(err);

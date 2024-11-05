@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Nav from '../../Components/NavBar/Nav';
 import Footer from '../../Components/Footer/Footer';
 import { Row, Spin, Col, Grid } from 'antd';
@@ -13,6 +13,7 @@ import { Carousel } from 'antd';
 import './Home.css';
 import ServiceSlider from '../../Components/ServiceSlider/ServiceSlider';
 import ServiceGrid from '../../Components/ServiceGrid/ServiceGrid';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -24,7 +25,9 @@ const Home = props => {
 
    
 
-const {user,setUser,loading,setLoading,success,error,contextHolder,currLocation,  servicesData,}=useContext(userContext);
+const {user,setUser,loading,setLoading,success,error,contextHolder,currLocation,  servicesData,  setSearchVal}=useContext(userContext);
+
+
 
 
     const screens = useBreakpoint();

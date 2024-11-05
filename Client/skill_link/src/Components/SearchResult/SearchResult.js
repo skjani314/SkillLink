@@ -1,16 +1,16 @@
-import { Avatar, Row,Col, Pagination,Grid } from 'antd';
-import React, { useContext } from 'react';
+import { Avatar, Row,Col, Pagination,Grid ,Typography} from 'antd';
+import React, { useContext, useEffect, useState } from 'react';
 import ServiceCard from '../Cards/ServiceCard';
 import './SearchResult.css';
 import userContext from '../Login/UserContext';
 
 
 const {useBreakpoint}=Grid;
-
+const {Text}=Typography;
 const SearchResult = props => {
 
 const {servicesData}=useContext(userContext);
-
+const {resultdata,setResultdata}=props;
 const screens=useBreakpoint();
 
     const sdata = [
@@ -156,6 +156,26 @@ const screens=useBreakpoint();
 
     ]
 
+useEffect(()=>{
+
+console.log(props.query)
+
+    if (props.query && props.query != "") {
+        const result = servicesData.filter((each) => (
+          each.name.toLowerCase().includes(props.query.toLowerCase()) ||
+          each.category.toLowerCase().includes(props.query.toLowerCase())
+        )
+        )
+        console.log(result);
+        setResultdata([...result]);
+      }
+else{
+  setResultdata(servicesData)
+}
+
+},[props.query])
+
+
     return (
         <>
         <div style={{ background: "whitesmoke" }} >
@@ -166,8 +186,8 @@ const screens=useBreakpoint();
                     <p className='m-2 text-bold fs-4'>Select a Service<hr></hr></p>
                     <div className='d-flex'>
                         <Row>
-                        {  sdata.map((each)=>(
-                            <Col span={6} className='m-2'>
+                        {  sdata.map((each,index)=>(
+                            <Col span={6} className='m-2' key={index}>
                                 <div className='container'>
                                     <center> <Avatar size={50} shape='square' icon={<img src={each.imgurl} className='img-fluid' />} /><br></br>
                                         {each.name}</center>
@@ -181,8 +201,8 @@ const screens=useBreakpoint();
                     <p className='m-2 text-bold fs-4'>Select a Service<hr></hr></p>
                     <div className='d-flex'>
                         <Row>
-                        {  sdata.map((each)=>(
-                            <Col span={6} className='m-2'>
+                        {  sdata.map((each,index)=>(
+                            <Col span={6} className='m-2' key={index}>
                                 <div className='container'>
                                     <center> <Avatar size={50} shape='square' icon={<img src={each.imgurl} className='img-fluid' />} /><br></br>
                                         {each.name}</center>
@@ -195,16 +215,19 @@ const screens=useBreakpoint();
                 </Row>  
                 </Col>
                 <Col md={{span:15}}  >
+                    {
+                        props.query?<h1>Serach result For {props.query}</h1>:null
+                    }
 
                     <Row>
               
                     {
-                       servicesData.map((each)=>(
+                       resultdata.map((each,index)=>(
                         screens.md?
-                        <Col md={{span:8}} >
+                        <Col md={{span:8}} key={index}>
                         <ServiceCard data={each} />
                         </Col>
-                        : <Col sm={{span:22,offset:1}} xs={24} >
+                        : <Col sm={{span:22,offset:1}} xs={24} key={index}>
                         <ServiceCard data={each} mobile={true} />
                         </Col>
                        ))
