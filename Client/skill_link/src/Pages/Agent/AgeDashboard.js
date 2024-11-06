@@ -15,7 +15,7 @@ const AgeDashboard = props => {
 
     const { contextHolder, error, user,  setCurrLocation, success, activeTab, changeActiveTab } = useContext(userContext);
     const [requestsData, setRequestsData] = useState([]);
-    const [formdata, setformdata] = useState({ location: '', status: '' })
+    const [formdata, setformdata] = useState({ location: 0, status: '' })
     const { id } = useParams();
     const { Text } = Typography;
     const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ console.log(user);
 
 
             try {
-
+    console.log(user._id)
                 const result = await axios.get('/requests?req_to=' + user._id);
                 const req_result = await axios.get('/requests?req_from=' + user._id);
                 setRequestsData(result.data);
@@ -62,6 +62,7 @@ console.log(user);
             const form_data = new FormData();
             form_data.append('location', formdata.location);
             form_data.append('req_from', user._id);
+            console.log(formdata.location);
             const result = await axios.post('/requests', form_data);
             console.log(result.data);
             setCurrLocation((prev)=>(prev))
