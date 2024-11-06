@@ -106,9 +106,10 @@ const data={
                else if(result.data.role=='agent'){
                 const agent_data=await axios.get('/agents?user_id='+result.data._id);
                 console.log(agent_data.data)
+                setUser({...result.data,...agent_data.data});
+
                   const agent_result = await axios.get('/agent_serviceprovider?agent_id=' + result.data._id);
                          setserProData([...agent_result.data]);
-                setUser({...result.data,...agent_data.data});
                }
                else{
                 setUser({...result.data})
