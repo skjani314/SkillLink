@@ -471,7 +471,7 @@ app.get('/requests', async (req, res, next) => {
                     const { name, mobile } = await User.findById(req_from);
                     const x = await serviceProviders.findOne({ user_id: req_from });
                     if (x) {
-                        return { date, name, mobile, proffision: x.proffision, location: x.location, req_id: each._id, req_ser_pro_id: s._id, status };
+                        return { date, name, mobile, proffision: x.proffision, location: x.location, req_id: each._id, req_ser_pro_id: x._id, status };
                     }
                     else {
                         const { _id, location } = await agents.findOne({ user_id: req_from })
@@ -600,7 +600,7 @@ app.post('/locservices', async (req, res, next) => {
     try {
 
         const { pincode, ser_id, ser_pro, cost, time } = req.body;
-
+      console.log(ser_id)
         const is_locser = await locservice.findOne({ ser_id, location: pincode });
         if (is_locser == null) {
             const locser = await locservice.create({ ser_id, location: pincode });

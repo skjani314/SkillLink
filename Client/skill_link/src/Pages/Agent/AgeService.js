@@ -16,15 +16,25 @@ import SerProviderSuggest from '../../Components/Cards/SerProviderSuggest';
 const AgeService = props => {
 
 
-    const { contextHolder, error, user, loading,setLoading, success, activeTab, changeActiveTab, servicesData, setCurrLocation,serProData } = useContext(userContext);
+    const { contextHolder, error, user, loading,setLoading, success, servicesData,activeTab, changeActiveTab,  setCurrLocation,serProData } = useContext(userContext);
     const { id } = useParams();
     const [isOpen, setIsOpen] = useState({ modal: false, ser_id: '', service_id: '', ser_pro: '', ser_pro_id: '', cost: '', time: '' })
     const [serviceSuggestData, setServiceSuggestData] = useState([]);
     const [serProSuggestData, setserProSuggestData] = useState([]);
-
+const [servicesDataAge,setServicesDataAge]=useState([]);
     useEffect(() => {
         changeActiveTab("SERVICES")
         setCurrLocation(user.location);
+
+const getdata=async ()=>{
+
+const data=await axios.get('/services');
+console.log(data);
+setServicesDataAge([...data.data])
+}
+
+getdata();
+
     }, [])
 
 const hanldeSerProChange=async (e)=>{
@@ -50,12 +60,13 @@ const hanldeSerProChange=async (e)=>{
     const handleServiceChange = async (e) => {
 
         setIsOpen((prev) => ({ ...prev, ser_id: e.target.value }))
+       
         if (e.target.value == '') {
             setServiceSuggestData([]);
         }
         else {
 
-            const data = servicesData.filter((each) => (
+            const data = servicesDataAge.filter((each) => (
 
                 each.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
                 each.category.toLowerCase().includes(e.target.value.toLowerCase())
