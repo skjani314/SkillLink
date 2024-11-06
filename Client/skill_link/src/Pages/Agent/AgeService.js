@@ -16,7 +16,7 @@ import SerProviderSuggest from '../../Components/Cards/SerProviderSuggest';
 const AgeService = props => {
 
 
-    const { contextHolder, error, user, loading,setLoading, success, servicesData,activeTab, changeActiveTab,  setCurrLocation,serProData } = useContext(userContext);
+    const { contextHolder, error, user, setUser,loading,setLoading, success, servicesData,activeTab, changeActiveTab,  setCurrLocation,serProData } = useContext(userContext);
     const { id } = useParams();
     const [isOpen, setIsOpen] = useState({ modal: false, ser_id: '', service_id: '', ser_pro: '', ser_pro_id: '', cost: '', time: '' })
     const [serviceSuggestData, setServiceSuggestData] = useState([]);
@@ -25,6 +25,7 @@ const [servicesDataAge,setServicesDataAge]=useState([]);
     useEffect(() => {
         changeActiveTab("SERVICES")
         setCurrLocation(user.location);
+        setUser(prev=>({...prev}))
 
 const getdata=async ()=>{
 
