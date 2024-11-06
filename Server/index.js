@@ -397,9 +397,9 @@ app.get('/agents', async (req, res, next) => {
             res.json(data)
         }
         else {
-            const { location, verified } = await agents.findOne({ user_id: user_id })
+            const { location, verified,status } = await agents.findOne({ user_id: user_id })
 
-            res.json({ location, verified });
+            res.json({ location, verified ,status});
         }
 
     } catch (err) {
@@ -430,7 +430,7 @@ app.post('/requests', async (req, res, next) => {
                 next(new Error('Location is Unavailable'))
             }
         } else {
-            await agents.findByIdAndUpdate({ _id: req_from }, { location }, { new: true });
+            await agents.findByIdAndUpdate({ _id: req_from }, { location ,status:"Pending"}, { new: true });
 
             const admin_data = await User.findOne({ role: 'admin' })
 
@@ -460,7 +460,6 @@ app.get('/requests', async (req, res, next) => {
         const { req_to, transaction_flag, req_from } = req.query;
         if (req_from != null) {
             const result = await requests.findOne({ req_from });
-            console.log('ji')
             res.json(result);
         }
         else {
@@ -921,7 +920,7 @@ app.post('/register', async (req, res, next) => {
             if (role == 'supplier') {
                 await serviceProviders.create({ user_id: result._id, status: false, rating: 0, proffision: '', location: 0, verified: false })
             } else if (role == 'agent') {
-                await agents.create({ user_id: result._id, verified: false, location: 0 })
+                await agents.create({ user_id: result._id, verified: false, location: 0 ,status:'Request'})
             } else {
                 console.log('customer');
             }

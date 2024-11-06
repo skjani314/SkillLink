@@ -13,13 +13,13 @@ import { TextField } from '@mui/material';
 const AgeDashboard = props => {
 
 
-    const { contextHolder, error, user, setUser, success, activeTab, changeActiveTab } = useContext(userContext);
+    const { contextHolder, error, user,  setCurrLocation, success, activeTab, changeActiveTab } = useContext(userContext);
     const [requestsData, setRequestsData] = useState([]);
     const [formdata, setformdata] = useState({ location: '', status: '' })
     const { id } = useParams();
     const { Text } = Typography;
     const [loading, setLoading] = useState(false);
-
+console.log(user);
     useEffect(() => {
 
         changeActiveTab('DASHBOARD')
@@ -32,7 +32,8 @@ const AgeDashboard = props => {
                 const req_result = await axios.get('/requests?req_from=' + user._id);
                 setRequestsData(result.data);
                 console.log(req_result.data);
-                setformdata((prev) => ({ ...prev, status: req_result.data.status }))
+                   if(req_result.data.status){
+                setformdata((prev) => ({ ...prev, status: req_result.data.status }))}
             }
             catch (err) {
                 console.log(err);
@@ -63,7 +64,8 @@ const AgeDashboard = props => {
             form_data.append('req_from', user._id);
             const result = await axios.post('/requests', form_data);
             console.log(result.data);
-
+            setCurrLocation((prev)=>(prev))
+success("request Submitted Successfully")
         }
         catch (err) {
             error("unable Process the Request");
@@ -128,7 +130,7 @@ console.log(user)
 
                                             <div className="dashboard-container pt-3">
                                                 {
-                                                    user.status !== 'Pending' ?
+                                                   formdata.status !=='Pending' ?
                                                         <>
                                                             <h2>Enter The Location Where Do You want to Work</h2>
                                                             <center>
