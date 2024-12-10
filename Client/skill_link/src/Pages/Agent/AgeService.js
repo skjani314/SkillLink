@@ -16,15 +16,27 @@ import SerProviderSuggest from '../../Components/Cards/SerProviderSuggest';
 const AgeService = props => {
 
 
-    const { contextHolder, error, user, loading,setLoading, success, activeTab, changeActiveTab, servicesData, setCurrLocation,serProData } = useContext(userContext);
+    const { contextHolder, error, user, loading,setLoading, success, activeTab, changeActiveTab, setCurrLocation,serProData } = useContext(userContext);
     const { id } = useParams();
     const [isOpen, setIsOpen] = useState({ modal: false, ser_id: '', service_id: '', ser_pro: '', ser_pro_id: '', cost: '', time: '' })
     const [serviceSuggestData, setServiceSuggestData] = useState([]);
     const [serProSuggestData, setserProSuggestData] = useState([]);
-
+const [servicesDataAge,setservicesDataAge]=useState([]);
     useEffect(() => {
         changeActiveTab("SERVICES")
         setCurrLocation(user.location);
+
+const getServicesData=async ()=>{
+
+
+const result=await axios.get('/services');
+setservicesDataAge([...result.data])
+console.log(result);
+
+
+}
+getServicesData()
+
     }, [])
 
 const hanldeSerProChange=async (e)=>{
@@ -55,7 +67,7 @@ const hanldeSerProChange=async (e)=>{
         }
         else {
 
-            const data = servicesData.filter((each) => (
+            const data = servicesDataAge.filter((each) => (
 
                 each.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
                 each.category.toLowerCase().includes(e.target.value.toLowerCase())
