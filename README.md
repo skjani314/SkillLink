@@ -1,53 +1,70 @@
-# SkillLink
+# **SkillLink**
 
-#Project Overview
+## **Project Overview**
 
-In this we have 3 type of users with following features
+SkillLink is a complaint management system designed to streamline the process of lodging and resolving issues related to mess operations. The system has three types of users, each with specific features:
 
-1.Student
-a) can raise complaints on various issues and describe the complaint in test and also can give images with that complaint
-this complaints goes to representative/co-ordinator
-b) can see the his/her complaints in dashboard and on clicking on any complaint in table you will get a pop up with more detials
-   about that complaint like 
-           i)images,description,issue,category
-           ii) Time line of complaint
-2.Representative
-a) can review the complaints raised by students in table and when clicking on any complaint representative will get a pop up showing complaint details like
-           i)images,description,issue category
-           ii)Timeline 
-           iii)user details who raised complaint
-after reviewing he/she can  change the status of complaint by clicking on corresponding complaint statsu row button i.e statsu button
-b) representative can also raise complaints as students but this complaints goes to admin users
-c)can see the dash board in which
-      i)bar graph -> represent monthly wise complaints i.e no.of complaints in each month
-      ii)pie chart -> represent category wise complaints in current month
-      which can help estimate the mess performance for current month by comparig other months in graph and know the major problem category in current month by pie chart 
+### **1. Student**
+- **Features**:
+  - Raise complaints on various issues with the ability to:
+    - Provide descriptions.
+    - Attach images.
+  - Complaints are forwarded to representatives/coordinators.
+  - View all complaints in a dashboard.
+  - Click on a complaint in the table to view detailed information in a pop-up, including:
+    - Images, description, issue, and category.
+    - Timeline of the complaint.
 
-3.Admin
-a)can review and  change status of student or representative complaints
-b)same dashboard as in representative log in
-c)student complaints forwarded to admin when it is not solved with in 2 days my representatives
+---
 
-->all users can reset their password by getting reset link in email
+### **2. Representative**
+- **Features**:
+  - Review complaints raised by students in a table format.
+  - Click on a complaint to view a pop-up with details, including:
+    - Images, description, issue category.
+    - Timeline.
+    - User details of the complaint raiser.
+  - Change the status of complaints via a status button in the table.
+  - Raise complaints as a student (these complaints are forwarded to the admin).
+  - Access a dashboard with:
+    - **Bar Graph**: Displays the number of complaints for each month.
+    - **Pie Chart**: Displays category-wise complaints for the current month.
+  - Dashboards assist in analyzing mess performance trends and identifying major problem categories.
 
+---
 
-#Tech Stack Used
-we used MERN Stack for complete web development
-specifically we used vitejs and converted to progressive web app
-vitejs->frontend
-mongodb->database
-express/nodejs->backend
-other frame works->bootstrap
-for progressive web app->android studio
-converted this website to progressive web app
+### **3. Admin**
+- **Features**:
+  - Review and change the status of both student and representative complaints.
+  - Access the same dashboard as the representative.
+  - Handle student complaints that are escalated after 2 days of inaction by representatives.
 
-#Environment variables
-all environment variables are declared in specified .env files for both backend and front end
+---
 
-#Deployment links
-frontend->https://mess-monetering.vercel.app/
-backend->https://messmonetering-production.up.railway.app/
+### **Common Features**
+- **Password Reset**:
+  - All users can reset their password using a reset link sent to their email.
 
+---
 
+## **Tech Stack**
+- **Frontend**:
+  - Vite.js (converted to a Progressive Web App).
+  - Bootstrap (for responsive design).
+- **Backend**:
+  - Node.js / Express.js.
+- **Database**:
+  - MongoDB.
+- **Progressive Web App**:
+  - Android Studio was used to convert the website into a PWA.
 
-      
+---
+
+## **Environment Variables**
+All environment variables are defined in `.env` files for both the backend and frontend.
+
+---
+
+## **Deployment Links**
+- **Frontend**: [SkillLink Frontend](https://mess-monetering.vercel.app/)
+- **Backend**: [SkillLink Backend](https://messmonetering-production.up.railway.app/)
