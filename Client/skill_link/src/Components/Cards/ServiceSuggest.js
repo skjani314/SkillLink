@@ -9,7 +9,7 @@ const handleServiceSuggestClick=()=>{
 
 
     props.setServiceSuggestData([])
-    props.setIsOpen((prev)=>({...prev,ser_id:props.data.name,service_id:props.data.ser_id}))
+    props.setIsOpen((prev)=>({...prev,ser_id:props.data.name,service_id:props.data._id}))
 
 }
 

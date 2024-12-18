@@ -62,11 +62,13 @@ const hanldeSerProChange=async (e)=>{
     const handleServiceChange = async (e) => {
 
         setIsOpen((prev) => ({ ...prev, ser_id: e.target.value }))
+       
         if (e.target.value == '') {
             setServiceSuggestData([]);
         }
         else {
 
+            const data = servicesDataAge.filter((each) => (
             const data = servicesDataAge.filter((each) => (
 
                 each.name.toLowerCase().includes(e.target.value.toLowerCase()) ||

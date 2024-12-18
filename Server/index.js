@@ -602,7 +602,7 @@ app.post('/locservices', async (req, res, next) => {
     try {
 
         const { pincode, ser_id, ser_pro, cost, time } = req.body;
-
+      console.log(ser_id)
         const is_locser = await locservice.findOne({ ser_id, location: pincode });
         if (is_locser == null) {
             const locser = await locservice.create({ ser_id, location: pincode });
@@ -687,6 +687,7 @@ app.post('/services', async (req, res, next) => {
 
 
         const { ser_name, category } = req.body;
+        
         const imgresult = await cloudinary.uploader.upload(req.files[0].path, {
             folder: 'services',
             public_id: ser_name,
