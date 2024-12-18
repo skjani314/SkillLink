@@ -29,7 +29,7 @@ const [servicesDataAge,setservicesDataAge]=useState([]);
 const getServicesData=async ()=>{
 
 
-const result=await axios.get('/services');
+const result=await axios.get(process.env.REACT_APP_API_URL+'/services');
 setservicesDataAge([...result.data])
 console.log(result);
 
@@ -91,7 +91,7 @@ form_data.append('ser_pro',isOpen.ser_pro_id);
 form_data.append('cost',isOpen.cost);
 form_data.append('time',isOpen.time);
 
-const result=await axios.post('/locservices',form_data);
+const result=await axios.post(process.env.REACT_APP_API_URL+'/locservices',form_data);
 console.log(result.data);
 success('Service Added Successfully')
 
@@ -133,7 +133,7 @@ setLoading(false);
                                 <h2>Recent Service</h2>
                                 <Row>
                                     {
-                                        servicesData.map((each, index) => (
+                                        servicesDataAge.map((each, index) => (
                                             <Col span={11} offset={1} key={index}>
                                                 <ServiceCard data={each} agent />
                                             </Col>

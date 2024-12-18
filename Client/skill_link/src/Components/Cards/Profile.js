@@ -32,7 +32,7 @@ const Profile = props => {
             fileList.forEach(file => {
                 form_data.append('img', file.originFileObj);
             });
-            const result = await axios.post('/profile', form_data)
+            const result = await axios.post(process.env.REACT_APP_API_URL+'/profile', form_data)
             console.log(result)
             success("Updated Successfully")
             setCurrLocation((prev)=>({...prev}))

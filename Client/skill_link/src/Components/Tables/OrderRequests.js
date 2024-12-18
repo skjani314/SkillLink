@@ -18,7 +18,7 @@ const handleAcceptClick=async (id)=>{
 setLoading(true);
 try{
 
-const result=await axios.put('/orders?order_id='+id+'&status=Accept')
+const result=await axios.put(process.env.REACT_APP_API_URL+'/orders?order_id='+id+'&status=Accept')
 console.log(result.data);
 
 }
@@ -36,7 +36,7 @@ const handleRejectClick=async (id)=>{
     setLoading(true);
     try{
     
-    const result=await axios.put('/orders?order_id='+id+'&status=Canceled')
+    const result=await axios.put(process.env.REACT_APP_API_URL+'/orders?order_id='+id+'&status=Canceled')
     console.log(result.data);
     
     }
@@ -55,7 +55,7 @@ const handleRejectClick=async (id)=>{
     return (
         <Spin tip="Loading...." size='large' spinning={loading}>
         <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <Table  size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
               <TableCell align="center">Date</TableCell>

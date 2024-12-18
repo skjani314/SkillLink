@@ -28,7 +28,7 @@ else
     form_data.append('customer_id',user._id);
     form_data.append('ser_pro_cost',props.data._id);
 
-    const result=await axios.post('/orders',form_data);
+    const result=await axios.post(process.env.REACT_APP_API_URL+'/orders',form_data);
     console.log(result);
     success("Service Added to cart succesfully");
     setUser(prev=>({...prev}));

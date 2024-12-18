@@ -27,7 +27,7 @@ setLoading(true);
 
 
 
-const result =await axios.put('/locservices?cost='+form_data.cost+"&time="+form_data.time+"&id="+props.data.id);
+const result =await axios.put(process.env.REACT_APP_API_URL+'/locservices?cost='+form_data.cost+"&time="+form_data.time+"&id="+props.data.id);
 setModalOpan(false); 
 success('Srvice details updated successfully');
 

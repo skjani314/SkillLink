@@ -27,7 +27,7 @@ const getData=async ()=>{
 
 try{
 
-const result=await axios.get('/requests?transaction_flag=true&req_to='+user._id)
+const result=await axios.get(process.env.REACT_APP_API_URL+'/requests?transaction_flag=true&req_to='+user._id)
 setTransactionData([...result.data])
 
 }

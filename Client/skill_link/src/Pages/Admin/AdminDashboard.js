@@ -23,7 +23,7 @@ const AdminDashboard = props => {
     useEffect(() => {
 
         const getData = async () => {
-            const result = await axios.get('/requests?req_to=' + user._id)
+            const result = await axios.get(process.env.REACT_APP_API_URL+'/requests?req_to=' + user._id)
             setRequestsData([...result.data]);
         }
 

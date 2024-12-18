@@ -158,7 +158,6 @@ const screens=useBreakpoint();
 
 useEffect(()=>{
 
-console.log(props.query)
 
     if (props.query && props.query != "") {
         const result = servicesData.filter((each) => (

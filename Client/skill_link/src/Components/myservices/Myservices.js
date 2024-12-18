@@ -18,7 +18,7 @@ const getMyservice=async ()=>{
 
 try{
 
-const result =await axios.get('/ser_myservices?user_id='+user._id);
+const result =await axios.get(process.env.REACT_APP_API_URL+'/ser_myservices?user_id='+user._id);
 setmyservice([...result.data])
 
 }

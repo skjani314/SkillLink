@@ -98,17 +98,17 @@ const data={
       {
       try{
 
-           const result= await axios.post('/get-user');
+           const result= await axios.post(process.env.REACT_APP_API_URL+'/get-user',{},{withCredentials:true});
                if(result.data.role=='supplier'){
-                const ser_pro_data=await axios.get('/serviceproviders?id='+result.data._id);
+                const ser_pro_data=await axios.get(process.env.REACT_APP_API_URL+'/serviceproviders?id='+result.data._id);
                 setUser({...result.data,...ser_pro_data.data})
                }
                else if(result.data.role=='agent'){
-                const agent_data=await axios.get('/agents?user_id='+result.data._id);
+                const agent_data=await axios.get(process.env.REACT_APP_API_URL+'/agents?user_id='+result.data._id);
                 console.log(agent_data.data)
                 setUser({...result.data,...agent_data.data});
 
-                  const agent_result = await axios.get('/agent_serviceprovider?agent_id=' + result.data._id);
+                  const agent_result = await axios.get(process.env.REACT_APP_API_URL+'/agent_serviceprovider?agent_id=' + result.data._id);
                          setserProData([...agent_result.data]);
                }
                else{
@@ -129,7 +129,7 @@ console.log(user);
     const getData=async ()=>{
 try{
  
-const result=await axios.get('/locservices?location='+currLocation.pincode);
+const result=await axios.get(process.env.REACT_APP_API_URL+'/locservices?location='+currLocation.pincode);
 
 setServicesData([...result.data]);
 console.log(result);
@@ -154,7 +154,7 @@ useEffect(()=>{
 
     try{
       console.log(user)
-      const result=await axios.get('/orders?customer_id='+user._id+'&status=cart')
+      const result=await axios.get(process.env.REACT_APP_API_URL+'/orders?customer_id='+user._id+'&status=cart')
       console.log(result.data);
        setOrders([...result.data.data]);
        setTotalCost(result.data.x);
@@ -171,7 +171,7 @@ useEffect(()=>{
 
 try{
 
-const result=await axios.get('/address?customer_id='+user._id)
+const result=await axios.get(process.env.REACT_APP_API_URL+'/address?customer_id='+user._id)
 console.log(result);
 setAddress([...result.data]);
 

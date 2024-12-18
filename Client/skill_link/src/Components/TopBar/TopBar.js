@@ -22,7 +22,7 @@ const handleLogout=async ()=>{
     setLoading(true);
     try{
     
-      await axios.post('/logout')
+      await axios.post(process.env.REACT_APP_API_URL+'/logout')
        setUser(null);
        setLoading(false);
        navigate('/');

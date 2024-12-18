@@ -24,7 +24,7 @@ const AdminMyAgents = props => {
 setLoading(true);
             try {
       
-                const result = await axios.get('/agents?verified_by=' + user._id)
+                const result = await axios.get(process.env.REACT_APP_API_URL+'/agents?verified_by=' + user._id)
                 setagentsData([...result.data])
             }
             catch (err) {

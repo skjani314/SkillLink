@@ -24,7 +24,7 @@ const AdminReqTable = props => {
         try {
 
 
-            const result = await axios.put('/requests?req_id=' + req_id + '&status=Reject');
+            const result = await axios.put(process.env.REACT_APP_API_URL+'/requests?req_id=' + req_id + '&status=Reject');
              success("Rejected successfully")
              
         }
@@ -42,7 +42,7 @@ const AdminReqTable = props => {
         setLoading(true);
         try {
 
-           const result=await axios.put('/requests?req_id='+req_id+'&status=Accept&req_agent_id='+req_agent_id+'&verified_by='+user._id)
+           const result=await axios.put(process.env.REACT_APP_API_URL+'/requests?req_id='+req_id+'&status=Accept&req_agent_id='+req_agent_id+'&verified_by='+user._id)
            console.log(result.data);
 
         }
@@ -64,8 +64,7 @@ setLoading(false);
             size='large'
             spinning={loading} >
             <TableContainer component={Paper} >
-                <Table sx={
-                    { minWidth: 650 }}
+                <Table 
                     size="small"
                     aria-label="a dense table" >
                     <TableHead >

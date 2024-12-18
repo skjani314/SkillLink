@@ -26,7 +26,7 @@ const AgeTransaction = props => {
 
             try {
 
-                const result = await axios.get('/requests?req_to=' + user._id+'&transaction_flag=true');
+                const result = await axios.get(process.env.REACT_APP_API_URL+'/requests?req_to=' + user._id+'&transaction_flag=true');
                 setRequestsData(result.data);
                 console.log(result.data);
             }

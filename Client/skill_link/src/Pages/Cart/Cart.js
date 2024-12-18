@@ -32,7 +32,7 @@ const Cart = props => {
             form_data.append('addr', formData.addr);
             form_data.append('customer_id', user._id);
 
-            const result = await axios.post('/address', form_data);
+            const result = await axios.post(process.env.REACT_APP_API_URL+'/address', form_data);
             setUser((prev) => ({ ...prev }));
             setisopen(false);
             setFormData({ pincode: '', addr: '', })
@@ -62,7 +62,7 @@ const Cart = props => {
                 orders.map(async (each) => {
 
 
-                    const up_data = await axios.put('/orders?order_id=' + each.id + '&status=Request&address=' + address_id._id)
+                    const up_data = await axios.put(process.env.REACT_APP_API_URL+'/orders?order_id=' + each.id + '&status=Request&address=' + address_id._id)
 
                     console.log(up_data.data);
 

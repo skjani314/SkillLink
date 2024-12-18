@@ -28,7 +28,7 @@ const ServiceCard = props => {
         props.data.service_providers.map(async (each)=>{
            const {cost,time,_id}=each;
            console.log(each)
-          const result=await axios.get('/serviceproviders?ser_id='+each.ser_pro);
+          const result=await axios.get(process.env.REACT_APP_API_URL+'/serviceproviders?ser_id='+each.ser_pro);
           return {cost,time,_id,...result.data};
 
         })
@@ -58,7 +58,7 @@ const handleCancel = () => {
                 >
                     <Text level={4} style={{ color: 'black' }} className='responsive-text'><b>{props.data.name}</b> </Text> <br></br>
 
-                    <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.service_providers.length}</b></Text> <br></br>
+                    <Text className='responsive-text'> <MdPeopleAlt color='blue' className='mb-1' size={screens.xs ? 15 : screens.md ? 15 : 10} /> Available:<b>{props.data.service_providers?props.data.service_providers.length:0}</b></Text> <br></br>
                     <Text className='responsive-text'> <FaRupeeSign color='blue' size={screens.xs ? 15 : screens.md ? 15 : 10} />From :<b>{props.data.max}</b></Text>
                 </Card>
                 :

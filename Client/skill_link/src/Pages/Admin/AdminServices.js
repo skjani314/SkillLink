@@ -32,7 +32,7 @@ const AdminServices = props => {
 
             try {
 setLoading(true)
-                const result = await axios.get('/services?name=""')
+                const result = await axios.get(process.env.REACT_APP_API_URL+'/services?name='+"")
                 setSerData([...result.data])
                 setLoading(false)
             }
@@ -64,7 +64,7 @@ fileList.forEach(file => {
 });
 form_data.append('ser_name',formdata.ser_name)
 form_data.append('category',formdata.category)
-const result=await axios.post('/services',form_data);
+const result=await axios.post(process.env.REACT_APP_API_URL+'/services',form_data);
 console.log(result.data);
 success("Services Uploaded Successfully");
 

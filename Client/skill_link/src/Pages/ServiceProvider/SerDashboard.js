@@ -38,7 +38,7 @@ const SerDashboard = props => {
             form_data.append('proffision', req_data.Proffision);
             form_data.append('location', req_data.location);
 
-            const result = await axios.post('/requests', form_data);
+            const result = await axios.post(process.env.REACT_APP_API_URL+'/requests', form_data);
              setUser((prev)=>({...prev,status:true}));
             console.log(result.data);
             success("your Request is Submited Succesfully");

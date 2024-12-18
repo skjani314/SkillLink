@@ -18,7 +18,7 @@ const Dashboard = () => {
       setLoading(true);
       try {
 
-           const result=await axios.get('/orders?user_id='+user._id);
+           const result=await axios.get(process.env.REACT_APP_API_URL+'/orders?user_id='+user._id);
            setRequestsData(result.data);
        }
       catch (err) {

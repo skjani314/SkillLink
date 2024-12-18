@@ -28,8 +28,8 @@ console.log(user);
 
             try {
     console.log(user._id)
-                const result = await axios.get('/requests?req_to=' + user._id);
-                const req_result = await axios.get('/requests?req_from=' + user._id);
+                const result = await axios.get(process.env.REACT_APP_API_URL+'/requests?req_to=' + user._id);
+                const req_result = await axios.get(process.env.REACT_APP_API_URL+'/requests?req_from=' + user._id);
                 setRequestsData(result.data);
                 console.log(req_result.data);
                    if(req_result.data.status){
@@ -63,7 +63,7 @@ console.log(user);
             form_data.append('location', formdata.location);
             form_data.append('req_from', user._id);
             console.log(formdata.location);
-            const result = await axios.post('/requests', form_data);
+            const result = await axios.post(process.env.REACT_APP_API_URL+'/requests', form_data);
             console.log(result.data);
             setCurrLocation((prev)=>(prev))
 success("request Submitted Successfully")

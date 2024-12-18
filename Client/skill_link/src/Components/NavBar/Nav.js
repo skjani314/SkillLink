@@ -78,7 +78,7 @@ function Nav(props) {
 
       try {
         console.log(user)
-        const result = await axios.get('/orders?customer_id=' + user._id)
+        const result = await axios.get(process.env.REACT_APP_API_URL+'/orders?customer_id=' + user._id)
         console.log(result.data);
         setMyorderData([...result.data]);
       }
@@ -158,7 +158,7 @@ else{
     closeDrawer();
     try {
 
-      await axios.post('/logout')
+      await axios.post(process.env.REACT_APP_API_URL+'/logout')
       success("logged out successfully");
       setUser(null);
       setLoading(false);
@@ -330,7 +330,7 @@ console.log(search_Val)
              {
               searchresult.map((each,index)=>(
 
-                <div style={{background:"white"}} className="m-1" key={index} key={index} onClick={()=>handleSearchClick(each.name)}>
+                <div style={{background:"white"}} className="m-1" key={index} onClick={()=>handleSearchClick(each.name)}>
                 <Flex justify='between' gap={5}>
                     <Avatar shape="square" icon={<img src={each.img} alt="service" />} size={35} />
                     <Flex vertical>

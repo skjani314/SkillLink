@@ -21,7 +21,7 @@ const CartCard = props => {
         try {
 
 
-            const result = await axios.delete('/orders?id=' + props.data.id)
+            const result = await axios.delete(process.env.REACT_APP_API_URL+'/orders?id=' + props.data.id)
 
             console.log(result.data);
 

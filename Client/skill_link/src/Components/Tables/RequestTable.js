@@ -26,7 +26,7 @@ const RequestTable = props => {
         try {
 
 
-            const result = await axios.put('/requests?req_id=' + req_id + '&status=Reject');
+            const result = await axios.put(process.env.REACT_APP_API_URL+'/requests?req_id=' + req_id + '&status=Reject');
              success("Rejected successfully")
              
         }
@@ -44,7 +44,7 @@ const RequestTable = props => {
         setLoading(true);
         try {
 
-            const result = await axios.put('/requests?req_id=' + isOpen.req_id + '&status=Accept&rating='+isOpen.rating+'&verified_by='+user._id+'&req_ser_pro_id='+isOpen.req_ser_pro_id)
+            const result = await axios.put(process.env.REACT_APP_API_URL+'/requests?req_id=' + isOpen.req_id + '&status=Accept&rating='+isOpen.rating+'&verified_by='+user._id+'&req_ser_pro_id='+isOpen.req_ser_pro_id)
 
              console.log(result.data);
              setIsOpen({modal:false,rating:''})
@@ -69,8 +69,7 @@ setLoading(false);
                 size='large'
                 spinning={loading} >
                 <TableContainer component={Paper} >
-                    <Table sx={
-                        { minWidth: 650 }}
+                    <Table 
                         size="small"
                         aria-label="a dense table" >
                         <TableHead >

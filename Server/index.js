@@ -416,7 +416,7 @@ app.post('/requests', async (req, res, next) => {
     try {
 
         const { req_from, proffision, location } = req.body;
-
+   console.log(location)
         if (proffision) {
             const result = await serviceProviders.findOneAndUpdate({ user_id: req_from }, { proffision, location, status: true }, { new: true });
             console.log(result)
@@ -430,13 +430,14 @@ app.post('/requests', async (req, res, next) => {
                 next(new Error('Location is Unavailable'))
             }
         } else {
-            await agents.findByIdAndUpdate({ _id: req_from }, { location ,status:"Pending"}, { new: true });
+            console.log(location);
+          const data=  await agents.findByIdAndUpdate({ _id: req_from }, { location},{new:true});
 
             const admin_data = await User.findOne({ role: 'admin' })
 
             const result = await requests.create({ req_to: admin_data._id, req_from, status: 'Pending' });
 
-            res.json(result);
+            res.json(data);
         }
 
 
@@ -460,6 +461,7 @@ app.get('/requests', async (req, res, next) => {
         const { req_to, transaction_flag, req_from } = req.query;
         if (req_from != null) {
             const result = await requests.findOne({ req_from });
+            console.log(result)
             res.json(result);
         }
         else {
@@ -471,7 +473,7 @@ app.get('/requests', async (req, res, next) => {
                     const { name, mobile } = await User.findById(req_from);
                     const x = await serviceProviders.findOne({ user_id: req_from });
                     if (x) {
-                        return { date, name, mobile, proffision: x.proffision, location: x.location, req_id: each._id, req_ser_pro_id: s._id, status };
+                        return { date, name, mobile, proffision: x.proffision, location: x.location, req_id: each._id, req_ser_pro_id: x._id, status };
                     }
                     else {
                         const { _id, location } = await agents.findOne({ user_id: req_from })
@@ -709,7 +711,7 @@ app.get('/services', async (req, res, next) => {
 
 
     try {
-        const { category, name } = req.body;
+        const { category, name } = req.query;
 
         if (category != null) {
 
@@ -717,8 +719,16 @@ app.get('/services', async (req, res, next) => {
             res.json(result);
 
         } else {
-            const result = await services.find({ name: { $regex: new RegExp(name, 'i') } });
-            console.log(result)
+            console.log(name)
+            let result;
+            if (name == "") {
+                result = await services.find({});
+
+            } else {
+                // Otherwise, find records that match the regex
+                result = await services.find({ name: { $regex: new RegExp(name, 'i') } });
+            }
+            
             res.json(result);
         }
     } catch (err) {
@@ -1049,13 +1059,13 @@ app.post('/get-user', async (req, res, next) => {
 app.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
-
+     console.log(email)
 
         const user = await User.findOne({ email });
 
         if (!user) {
             next(new Error("User Not Found"));
-        }
+        }{
 
         const isMatch = await bcrypt.compare(password, user.password);
 
@@ -1075,6 +1085,7 @@ app.post('/login', async (req, res, next) => {
         } else {
             return res.status(401).json({ message: "Password incorrect" });
         }
+    }
     } catch (error) {
         console.error("Login error:", error);
         return res.status(500).json({ message: "Server error" });
