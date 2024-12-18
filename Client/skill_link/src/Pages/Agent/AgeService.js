@@ -69,7 +69,6 @@ const hanldeSerProChange=async (e)=>{
         else {
 
             const data = servicesDataAge.filter((each) => (
-            const data = servicesDataAge.filter((each) => (
 
                 each.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
                 each.category.toLowerCase().includes(e.target.value.toLowerCase())

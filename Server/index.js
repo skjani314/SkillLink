@@ -23,23 +23,46 @@ import requests from './models/requests.js';
 
 dotenv.config();
 const app = express();
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+      cb(null,'/tmp/');
+    },
+    filename:(req,file,cb)=>{
+      cb(null,Date.now()+path.extname(file.originalname));
+    }
+  
+  });
+  app.set("trust proxy",1);
 
+  const upload_file = multer({storage});
 
-const upload_file = multer({ dest: 'uploads/' });
-app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(cookieParser());
 
 
+
 app.use(cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-}))
+    origin: (origin, callback) => {
+      const allowedOrigins = ['https://pharmacy-xi-one.vercel.app','http://localhost:3000'];
+      if (origin && (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app'))) {
+          callback(null, true); 
+      } else {
+          callback(new Error('Not allowed by CORS')); 
+      }
+  },
+      methods:["POST","GET","PUT","DELETE"],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization']
+  
+    }))
 
 
 
-
+    app.use((req, res, next) => {
+        req.setTimeout(60000); 
+        next();
+    });
 
 
 mongoose.connect('mongodb+srv://skilllinkforget:' + process.env.PASSWORD + '@skilllink.z4fk4.mongodb.net/SkillLink', {
