@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: 'https://3000-skjani314-skilllink-253exn3hffq.ws-us116.gitpod.io/',
+  origin: 'http://localhost:3000',
   methods:['GET','POST','PUT','DELETE'],
   credentials: true,
 }))
@@ -697,13 +697,13 @@ app.post('/login', async (req, res, next) => {
     if (!user) {
       next(new Error("User Not Found"));
     }
-
+   else{
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (isMatch) {
       const accessToken = jwt.sign({ email }, process.env.KEY, { expiresIn: '7d' });
 
-      res.cookie('accessToken ', accessToken, {
+      res.cookie('accessToken', accessToken, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: true,
@@ -713,9 +713,11 @@ app.post('/login', async (req, res, next) => {
       });
 
       return res.status(200).json("logged in sucessfully");
+    
     } else {
       return res.status(401).json({ message: "Password incorrect" });
     }
+  }
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Server error" });

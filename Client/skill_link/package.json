@@ -1,7 +1,7 @@
 {
   "name": "skill_link",
   "version": "0.1.0",
-  "proxy": "https://3300-skjani314-skilllink-253exn3hffq.ws-us116.gitpod.io/",
+  "proxy":"https://skilllink-xi5r.onrender.com",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
