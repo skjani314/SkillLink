@@ -7,9 +7,9 @@ ser_id:{
     type:mongoose.Schema.Types.ObjectId,
     ref:'services'
 },
-location:Number
+location:Number 
 
-});
+}); 
 
 locserviceSchema.pre('remove',async (next)=>{
 

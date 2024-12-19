@@ -25,7 +25,9 @@
         display: none;
       }
   }
-
+.search-result{
+  top:65px;
+}
 .Link{
   text-decoration: none;
   color: black;
@@ -36,3 +38,13 @@
 color: blue;
 
 }
+
+@media(max-width:990px){
+
+  .search-result{
+    top:27%;
+  }
+  
+  
+  }
+

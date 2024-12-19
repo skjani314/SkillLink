@@ -5,6 +5,7 @@ import './login.css';
 import axios from 'axios';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import userContext from './UserContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function SigninReg(props) {
 const [FormFlag,setFormFlag]=useState('reg');
@@ -17,10 +18,10 @@ const [lcase,setLcase]=useState(false);
 const [ucase,setUcase]=useState(false);
 const [dig,setDig]=useState(false);
 const [spc,setSpc]=useState(false);
-const {user,setUser,loading,setLoading,success,error,contextHolder}=useContext(userContext);
+const {user,setUser,loading,setLoading,success,error,contextHolder,setserProData}=useContext(userContext);
 const [forgetpass,setForgetPass]=useState({email:'',flag:false});
 const {otpform,setOtpform}=props;
-
+const navigate=useNavigate();
 
 
 
@@ -33,11 +34,11 @@ const onChange =async (text) =>
 try{ 
   
 setLoading(true);  
-const validation=await axios.post('/verify-otp',{otp:text,email:FormData.email})
+const validation=await axios.post(process.env.REACT_APP_API_URL+'/verify-otp',{otp:text,email:FormData.email})
 
    success("OTP Verified Successfully");
 
-  const user=await axios.post('/register', {FormData,role:FormData.role}, { withCredentials: true })  
+  const user=await axios.post(process.env.REACT_APP_API_URL+'/register', {FormData,role:FormData.role}, { withCredentials: true })  
   success("Account Created successfully");
   setFormData({name:'',email:'',password:'',cpassword:'',mobile:''})
   setLoading(false);
@@ -167,7 +168,7 @@ if(each.checked){role=each.value}
     {
         setFormData((prev)=>({...prev,role}));
 try{
-  const isOtpSent =await  axios.post('/send-otp',{email:FormData.email},{withCredentials:true})
+  const isOtpSent =await  axios.post(process.env.REACT_APP_API_URL+'/send-otp',{email:FormData.email},{withCredentials:true})
   setLoading(false);
      setOtpform(true);
      setForgetPass(false);
@@ -195,16 +196,44 @@ try{
       e.preventDefault();
       setLoading(true);
        try{
-        
-       await axios.post('/login',LogData, { withCredentials: true })
+        console.log(LogData);
+       await axios.post(process.env.REACT_APP_API_URL+'/login',LogData, { withCredentials: true })
     
         setLogdata({email:'',password:''});
         
-        const result= await axios.post('/get-user');
-        setUser(result.data);
+        const result= await axios.post(process.env.REACT_APP_API_URL+'/get-user',{},{withCredentials:true});
+        if(result.data.role=='supplier'){
+          const ser_pro_data=await axios.get(process.env.REACT_APP_API_URL+'/serviceproviders?id='+result.data._id);
+          setUser({...result.data,...ser_pro_data.data})
+         }
+         else if(result.data.role=='agent'){
+          const agent_data=await axios.get(process.env.REACT_APP_API_URL+'/agents?user_id='+result.data._id);
+          console.log(agent_data.data)
+            const agent_result = await axios.get(process.env.REACT_APP_API_URL+'/agent_serviceprovider?agent_id=' + result.data._id);
+                   setserProData([...agent_result.data]);
+          setUser({...result.data,...agent_data.data});
+         }
+         else{
+          setUser({...result.data})
+          console.log('not working')
+         }
+
+
+
+
+
         props.handleModalCancel();
         setLoading(false);
         setOtpform(false);
+        if(result.data.role=='supplier'){
+          navigate('/serviceproviders/'+result.data._id+'/dashboard');
+        }
+        else if(result.data.role=='agent'){
+          navigate('/agents/'+result.data._id+'/dashboard');
+        }
+        else if(result.data.role=='admin'){
+          navigate('/admins/'+result.data._id+'/dashboard');
+        }
         success("Logged In successfully");
 
        }catch(err)
@@ -221,7 +250,7 @@ try{
   setLoading(true);
 
  try{
-const result=await axios.post('/forget',{email:forgetpass.email})
+const result=await axios.post(process.env.REACT_APP_API_URL+'/forget',{email:forgetpass.email})
 success("Reset Link sent to Mail Successfully");
 setLoading(false);
 setForgetPass({email:'',flag:false});

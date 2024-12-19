@@ -6,7 +6,7 @@ ser_loc_id:{type:mongoose.Schema.Types.ObjectId,ref:"locservice"},
 ser_pro:{type:mongoose.Schema.Types.ObjectId,ref:"serviceProviders"},
 cost:Number,
 time:Number,
-
+  
 });
 
 
