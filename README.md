@@ -62,6 +62,25 @@ SkillLink is a platform that bridges the gap between skilled service providers a
 
 ---
 
+## **Sample Credentials**
+
+Here are some sample credentials for testing the platform:
+
+### **Admin**:
+- **Email**: `baladityasaich@gmail.com`  
+- **Password**: `skjani314@A`
+
+### **Agent**:
+- **Email**: `skskjani7@gmail.com`  
+- **Password**: `skjani314@A`
+
+### **Supplier**:
+- **Email**: `skjani254@gmail.com`  
+- **Password**: `skjani314@A`
+
+### **Customer**:
+- **Create At Your Own**
+
 ## **Environment Variables**
 
 All environment variables are securely defined in `.env` files for both the backend and frontend.
