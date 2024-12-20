@@ -1,70 +1,73 @@
 # **SkillLink**
 
-## **Project Overview**
+SkillLink is a platform that bridges the gap between skilled service providers and customers. Local administration is managed by agents, while overall administration is handled by the admin.
 
-SkillLink is a complaint management system designed to streamline the process of lodging and resolving issues related to mess operations. The system has three types of users, each with specific features:
-
-### **1. Student**
-- **Features**:
-  - Raise complaints on various issues with the ability to:
-    - Provide descriptions.
-    - Attach images.
-  - Complaints are forwarded to representatives/coordinators.
-  - View all complaints in a dashboard.
-  - Click on a complaint in the table to view detailed information in a pop-up, including:
-    - Images, description, issue, and category.
-    - Timeline of the complaint.
+## **Frontend**  
+[SkillLink Frontend](https://skill-link-three.vercel.app/)
 
 ---
 
-### **2. Representative**
-- **Features**:
-  - Review complaints raised by students in a table format.
-  - Click on a complaint to view a pop-up with details, including:
-    - Images, description, issue category.
-    - Timeline.
-    - User details of the complaint raiser.
-  - Change the status of complaints via a status button in the table.
-  - Raise complaints as a student (these complaints are forwarded to the admin).
-  - Access a dashboard with:
-    - **Bar Graph**: Displays the number of complaints for each month.
-    - **Pie Chart**: Displays category-wise complaints for the current month.
-  - Dashboards assist in analyzing mess performance trends and identifying major problem categories.
+## **Project Overview**
+
+### **1. Customer**
+**Features**:  
+- Customers can search for services, which are updated based on their location.  
+- They can place orders for services and have the option to choose their preferred service provider.  
+- Customers can add custom addresses, select delivery addresses, and track their orders.  
+
+---
+
+### **2. Supplier**
+**Features**:  
+- Suppliers can accept or reject service requests from customers.  
+- They can view their service details in-depth.  
+- Suppliers have the option to edit service prices and service times.  
+- They can access a detailed record of all their transactions.  
 
 ---
 
 ### **3. Admin**
-- **Features**:
-  - Review and change the status of both student and representative complaints.
-  - Access the same dashboard as the representative.
-  - Handle student complaints that are escalated after 2 days of inaction by representatives.
+**Features**:  
+- Verify agents and activate their accounts.  
+- Add new services to the platform.  
+- Access and manage agents and their verified accounts.  
+
+---
+
+### **4. Agent**
+**Features**:  
+- Verify suppliers and activate their accounts.  
+- Assign new services to specific suppliers.  
+- Access and manage suppliers and their verified accounts.  
 
 ---
 
 ### **Common Features**
-- **Password Reset**:
-  - All users can reset their password using a reset link sent to their email.
+**Password Reset**:  
+- All users can reset their passwords using a reset link sent to their registered email addresses.  
 
 ---
 
 ## **Tech Stack**
-- **Frontend**:
-  - Vite.js (converted to a Progressive Web App).
-  - Bootstrap (for responsive design).
-- **Backend**:
-  - Node.js / Express.js.
-- **Database**:
-  - MongoDB.
-- **Progressive Web App**:
-  - Android Studio was used to convert the website into a PWA.
+
+- **Frontend**:  
+  - React.js  
+  - Bootstrap (for responsive design)  
+
+- **Backend**:  
+  - Node.js / Express.js  
+
+- **Database**:  
+  - MongoDB  
 
 ---
 
 ## **Environment Variables**
-All environment variables are defined in `.env` files for both the backend and frontend.
+
+All environment variables are securely defined in `.env` files for both the backend and frontend.
 
 ---
 
 ## **Deployment Links**
-- **Frontend**: [SkillLink Frontend](https://mess-monetering.vercel.app/)
-- **Backend**: [SkillLink Backend](https://messmonetering-production.up.railway.app/)
+
+- **Frontend**: [SkillLink Frontend](https://skill-link-three.vercel.app/)
